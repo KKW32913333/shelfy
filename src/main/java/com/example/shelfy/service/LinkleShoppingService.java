@@ -82,20 +82,17 @@ public class LinkleShoppingService {
              */
             String sql = """
                 INSERT INTO shopping_item
-                  (group_id, name, quantity, memo, checked, created_by, sort_order, source)
+                  (name, quantity, memo, purchased, created_by, created_at)
                 VALUES
-                  (?, ?, 1, ?, false, ?, COALESCE((SELECT MAX(sort_order)+1 FROM shopping_item WHERE group_id = ?), 1), 'shelfy')
-                ON CONFLICT DO NOTHING
+                  (?, 1, ?, false, ?, NOW())
                 """;
 
             String memo = buildMemo(item);
 
             linkleJdbc.update(sql,
-                    item.getGroupId(),
                     item.getName(),
                     memo,
-                    item.getCreatedBy(),
-                    item.getGroupId()
+                    item.getCreatedBy()
             );
 
             // フラグ更新（Shelfy DB）
