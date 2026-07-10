@@ -49,6 +49,7 @@ public class ShelfyItem {
 
     /** 補充目安（この数を下回るとアラート） */
     @Column(nullable = false)
+    @Column(name = "min_stock", nullable = false)
     private int minStock = 1;
 
     /** メモ */
@@ -56,6 +57,7 @@ public class ShelfyItem {
     private String memo;
 
     /** 購入日 */
+    @Column(name = "purchase_date")
     private LocalDate purchaseDate;
 
     // =============================================
@@ -69,9 +71,11 @@ public class ShelfyItem {
      * null        = 期限なし（日用品など）
      */
     @Column(length = 20)
+    @Column(name = "expiry_type", length = 20)
     private String expiryType;
 
     /** 期限日 */
+    @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
     // =============================================
@@ -80,6 +84,7 @@ public class ShelfyItem {
 
     /** メイン写真URL（Cloudflare R2） */
     @Column(length = 500)
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     // =============================================
@@ -88,9 +93,11 @@ public class ShelfyItem {
 
     /** Linkleの買い物リストに追加済みか */
     @Column(nullable = false)
+    @Column(name = "linked_to_shopping", nullable = false)
     private boolean linkedToShopping = false;
 
     /** 最後にLinkle連携した日時 */
+    @Column(name = "linked_at")
     private LocalDateTime linkedAt;
 
     // =============================================
@@ -98,15 +105,19 @@ public class ShelfyItem {
     // =============================================
 
     /** 登録者（Linkleのuser_id） */
+    @Column(name = "created_by")
     private Long createdBy;
 
     /** 最終更新者 */
+    @Column(name = "updated_by")
     private Long updatedBy;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     // =============================================
