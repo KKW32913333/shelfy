@@ -82,9 +82,9 @@ public class LinkleShoppingService {
              */
             String sql = """
                 INSERT INTO shopping_item
-                  (name, quantity, memo, purchased, created_by, created_at, updated_at)
+                  (name, quantity, memo, purchased, created_by, updated_by, created_at, updated_at, group_id, sort_order)
                 VALUES
-                  (?, 1, ?, false, ?, NOW(), NOW())
+                  (?, 1, ?, false, ?, ?, NOW(), NOW(), ?, COALESCE((SELECT MAX(sort_order)+1 FROM shopping_item WHERE group_id = ?), 1))
                 """;
 
             String memo = buildMemo(item);
@@ -92,7 +92,10 @@ public class LinkleShoppingService {
             linkleJdbc.update(sql,
                     item.getName(),
                     memo,
-                    item.getCreatedBy()
+                    item.getCreatedBy(),
+                    item.getCreatedBy(),
+                    item.getGroupId(),
+                    item.getGroupId()
             );
 
             // フラグ更新（Shelfy DB）
