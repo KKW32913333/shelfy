@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アイテム登録 - Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="layout">
+  <div th:replace="~{fragments/sidebar :: sidebar('items')}"></div>
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title" th:text="${isNew} ? 'アイテムを追加' : 'アイテムを編集'">アイテムを追加</h1>
+      <a th:href="@{/dashboard}" class="btn btn-secondary">戻る</a>
+    </div>
+    <div class="form-card">
+      <form th:action="@{/items/save}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" name="id" th:value="${item.id}">
+        <div class="form-group">
+          <label class="form-label">カテゴリ</label>
+          <div class="category-tabs">
+            <label class="category-tab" th:classappend="${item.category == 'daily'} ? ' active' : ''">
+              <input type="radio" name="category" value="daily" th:checked="${item.category == 'daily'}" style="display:none"> 日用品
+            </label>
+            <label class="category-tab" th:classappend="${item.category == 'food'} ? ' active' : ''">
+              <input type="radio" name="category" value="food" th:checked="${item.category == 'food'}" style="display:none"> 食品
+            </label>
+            <label class="category-tab" th:classappend="${item.category == 'seasoning'} ? ' active' : ''">
+              <input type="radio" name="category" value="seasoning" th:checked="${item.category == 'seasoning'}" style="display:none"> 調味料
+            </label>
+            <label class="category-tab" th:classappend="${item.category == 'drink'} ? ' active' : ''">
+              <input type="radio" name="category" value="drink" th:checked="${item.category == 'drink'}" style="display:none"> 飲料
+            </label>
+            <label class="category-tab" th:classappend="${item.category == 'other'} ? ' active' : ''">
+              <input type="radio" name="category" value="other" th:checked="${item.category == 'other'}" style="display:none"> その他
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">商品名</label>
+          <input type="text" name="name" class="form-control" th:value="${item.name}" required placeholder="例：牛乳">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">在庫数</label>
+            <input type="number" name="stock" class="form-control" th:value="${item.stock}" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">補充目安</label>
+            <input type="number" name="minStock" class="form-control" th:value="${item.minStock}" min="1">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">期限種別</label>
+            <select name="expiryType" class="form-control">
+              <option value="">なし</option>
+              <option value="best_before" th:selected="${item.expiryType == 'best_before'}">賞味期限</option>
+              <option value="use_by" th:selected="${item.expiryType == 'use_by'}">消費期限</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">期限日</label>
+            <input type="date" name="expiryDate" class="form-control" th:value="${item.expiryDate}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">購入日</label>
+          <input type="date" name="purchaseDate" class="form-control" th:value="${item.purchaseDate}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">メモ</label>
+          <textarea name="memo" class="form-control" rows="3" th:text="${item.memo}"></textarea>
+        </div>
+        <div class="form-actions">
+          <a th:href="@{/dashboard}" class="btn btn-secondary">キャンセル</a>
+          <button type="submit" class="btn btn-primary" th:text="${isNew} ? '登録する' : '更新する'">登録する</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+<script>
+document.querySelectorAll('.category-tab input[type=radio]').forEach(function(radio) {
+  radio.addEventListener('change', function() {
+    document.querySelectorAll('.category-tab').forEach(function(t) { t.classList.remove('active'); });
+    radio.parentElement.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
