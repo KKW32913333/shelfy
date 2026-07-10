@@ -82,9 +82,9 @@ public class LinkleShoppingService {
              */
             String sql = """
                 INSERT INTO shopping_item
-                  (name, quantity, memo, purchased, created_by, created_at)
+                  (name, quantity, memo, purchased, created_by, created_at, updated_at)
                 VALUES
-                  (?, 1, ?, false, ?, NOW())
+                  (?, 1, ?, false, ?, NOW(), NOW())
                 """;
 
             String memo = buildMemo(item);
