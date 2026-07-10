@@ -110,13 +110,8 @@ public class ItemController {
     public String save(@ModelAttribute ShelfyItem item,
                        RedirectAttributes ra) {
         Long groupId  = currentUserService.getCurrentGroupId();
-        System.out.println("SAVE groupId=" + groupId + " userId=" + userId);
         Long userId   = currentUserService.getCurrentUserId();
-        if (groupId == null) {
-            groupId = currentUserService.getCurrentGroupId();
-        }
         item.setGroupId(groupId);
-        if (item.getGroupId() == null) { item.setGroupId(currentUserService.getCurrentGroupId()); }
 
         boolean isNew = (item.getId() == null);
         if (isNew) item.setCreatedBy(userId);
