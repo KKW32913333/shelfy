@@ -1,7 +1,6 @@
 package com.example.shelfy.repository;
 
 import com.example.shelfy.model.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,11 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class UserRepository {
 
-    @Qualifier("linkleJdbcTemplate")
     private final JdbcTemplate linkleJdbc;
+
+    public UserRepository(@Qualifier("linkleJdbcTemplate") JdbcTemplate linkleJdbc) {
+        this.linkleJdbc = linkleJdbc;
+    }
 
     private final RowMapper<User> userRowMapper = (rs, rowNum) -> {
         User u = new User();
