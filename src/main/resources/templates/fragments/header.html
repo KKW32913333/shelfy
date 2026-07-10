@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<header th:fragment="header(activePage)" class="app-header">
+  <div class="header-inner">
+    <a th:href="@{/dashboard}" class="header-logo">
+      <span class="logo-icon">🗄️</span>
+      <span class="logo-text">Shelfy</span>
+    </a>
+    <div class="header-actions">
+      <a th:href="@{/alerts}" class="header-icon-btn" title="アラート">
+        🔔
+      </a>
+      <div class="user-menu">
+        <span sec:authentication="name" class="user-name"></span>
+        <a th:href="@{/logout}" class="btn btn-sm">ログアウト</a>
+      </div>
+    </div>
+  </div>
+</header>
+</body>
+</html>

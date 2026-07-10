@@ -1,0 +1,167 @@
+package com.example.shelfy.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+/**
+ * Shelfy商品エンティティ
+ * 日用品・食品・調味料を統合管理
+ */
+@Entity
+@Table(name = "shelfy_item")
+@Getter
+@Setter
+public class ShelfyItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /** Linkleのgroup_idと共通 */
+    @Column(nullable = false)
+    private Long groupId;
+
+    /** 商品名 */
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    /**
+     * カテゴリ
+     * daily    = 日用品
+     * food     = 食品
+     * seasoning= 調味料
+     * drink    = 飲料
+     * other    = その他
+     */
+    @Column(nullable = false, length = 20)
+    private String category = "daily";
+
+    /** 在庫数 */
+    @Column(nullable = false)
+    private int stock = 0;
+
+    /** 補充目安（この数を下回るとアラート） */
+    @Column(nullable = false)
+    private int minStock = 1;
+
+    /** メモ */
+    @Column(length = 500)
+    private String memo;
+
+    /** 購入日 */
+    private LocalDate purchaseDate;
+
+    // =============================================
+    // 食品・調味料用 期限情報
+    // =============================================
+
+    /**
+     * 期限の種別
+     * best_before = 賞味期限
+     * use_by      = 消費期限
+     * null        = 期限なし（日用品など）
+     */
+    @Column(length = 20)
+    private String expiryType;
+
+    /** 期限日 */
+    private LocalDate expiryDate;
+
+    // =============================================
+    // 写真
+    // =============================================
+
+    /** メイン写真URL（Cloudflare R2） */
+    @Column(length = 500)
+    private String imageUrl;
+
+    // =============================================
+    // Linkle連携
+    // =============================================
+
+    /** Linkleの買い物リストに追加済みか */
+    @Column(nullable = false)
+    private boolean linkedToShopping = false;
+
+    /** 最後にLinkle連携した日時 */
+    private LocalDateTime linkedAt;
+
+    // =============================================
+    // 管理情報
+    // =============================================
+
+    /** 登録者（Linkleのuser_id） */
+    private Long createdBy;
+
+    /** 最終更新者 */
+    private Long updatedBy;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    // =============================================
+    // 表示用ヘルパー（永続化しない）
+    // =============================================
+
+    /** 期限までの残り日数（null = 期限なし） */
+    @Transient
+    public Long getDaysUntilExpiry() {
+        if (expiryDate == null) return null;
+        return ChronoUnit.DAYS.between(LocalDate.now(), expiryDate);
+    }
+
+    /**
+     * 期限ステータス
+     * expired = 期限切れ（赤）
+     * soon    = 7日以内（赤〜橙）
+     * warning = 30日以内（黄）
+     * ok      = 30日超（緑）
+     * none    = 期限なし
+     */
+    @Transient
+    public String getExpiryStatus() {
+        Long days = getDaysUntilExpiry();
+        if (days == null) return "none";
+        if (days < 0)  return "expired";
+        if (days <= 7) return "soon";
+        if (days <= 30) return "warning";
+        return "ok";
+    }
+
+    /**
+     * 在庫ステータス
+     * empty    = 0個（赤）
+     * low      = minStock未満（橙）
+     * ok       = 十分（緑）
+     */
+    @Transient
+    public String getStockStatus() {
+        if (stock <= 0) return "empty";
+        if (stock < minStock) return "low";
+        return "ok";
+    }
+
+    /** 日用品かどうか */
+    @Transient
+    public boolean isDaily() {
+        return "daily".equals(category);
+    }
+
+    /** 食品・調味料・飲料かどうか（期限管理対象） */
+    @Transient
+    public boolean isFood() {
+        return "food".equals(category)
+                || "seasoning".equals(category)
+                || "drink".equals(category);
+    }
+}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ダッシュボード — Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div th:replace="~{fragments/header :: header('dashboard')}"></div>
+
+<div class="layout">
+  <!-- サイドバー -->
+  <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
+
+  <!-- メインコンテンツ -->
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">ダッシュボード</h1>
+        <p class="page-subtitle">在庫の状況をひと目で確認できます</p>
+      </div>
+      <a th:href="@{/items/new}" class="btn btn-primary">＋ アイテムを追加</a>
+    </div>
+
+    <!-- サマリーカード -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--blue">📦</div>
+        <div class="stat-body">
+          <div class="stat-value" th:text="${stats.total}">0</div>
+          <div class="stat-label">総アイテム数</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--green">📅</div>
+        <div class="stat-body">
+          <div class="stat-value" th:text="${stats.expiringWarning}">0</div>
+          <div class="stat-label">賞味期限（30日以内）</div>
+        </div>
+      </div>
+      <div class="stat-card stat-card--warning">
+        <div class="stat-icon stat-icon--yellow">⏰</div>
+        <div class="stat-body">
+          <div class="stat-value" th:text="${stats.expiringSoon}">0</div>
+          <div class="stat-label">賞味期限（7日以内）</div>
+        </div>
+      </div>
+      <div class="stat-card stat-card--danger">
+        <div class="stat-icon stat-icon--red">🔴</div>
+        <div class="stat-body">
+          <div class="stat-value" th:text="${stats.expired}">0</div>
+          <div class="stat-label">期限切れ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+      <!-- 期限の近いアイテム -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">期限の近い食品・調味料</h2>
+          <a th:href="@{/food}" class="link-muted">すべて見る ›</a>
+        </div>
+        <div class="item-list">
+          <div th:if="${#lists.isEmpty(expiringItems)}" class="empty-state">
+            <p>期限の近いアイテムはありません 🎉</p>
+          </div>
+          <div th:each="item : ${expiringItems}" class="item-row">
+            <div class="item-thumb">
+              <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" alt="">
+              <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">🛒</span>
+            </div>
+            <div class="item-info">
+              <div class="item-name" th:text="${item.name}">商品名</div>
+              <div class="item-meta" th:text="${item.expiryType == 'use_by' ? '消費期限' : '賞味期限'} + '：' + ${#temporals.format(item.expiryDate,'yyyy/MM/dd')}"></div>
+            </div>
+            <div class="item-badge">
+              <span th:class="'badge badge--' + ${item.expiryStatus}"
+                    th:text="${item.daysUntilExpiry < 0 ? '期限切れ' :
+                               item.daysUntilExpiry == 0 ? '今日' :
+                               'あと' + item.daysUntilExpiry + '日'}">
+              </span>
+            </div>
+            <div class="item-actions">
+              <a th:href="@{/items/{id}(id=${item.id})}" class="btn-icon">›</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 在庫不足アイテム + カテゴリ別 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">在庫が少ないアイテム</h2>
+          <a th:href="@{/daily}" class="link-muted">すべて見る ›</a>
+        </div>
+        <div class="item-list">
+          <div th:if="${#lists.isEmpty(lowStockItems)}" class="empty-state">
+            <p>在庫不足のアイテムはありません ✅</p>
+          </div>
+          <div th:each="item : ${lowStockItems}" class="item-row">
+            <div class="item-thumb">
+              <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" alt="">
+              <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">📦</span>
+            </div>
+            <div class="item-info">
+              <div class="item-name" th:text="${item.name}">商品名</div>
+              <div class="item-meta" th:text="'補充目安：' + ${item.minStock} + '個'"></div>
+            </div>
+            <div class="item-badge">
+              <span th:class="'badge badge--' + ${item.stockStatus}"
+                    th:text="${item.stock} + '個'">
+              </span>
+              <span th:if="${item.linkedToShopping}" class="badge badge--linkle" title="Linkle買い物リストに追加済み">🛒Linkle</span>
+            </div>
+            <div class="item-actions">
+              <form th:action="@{/items/{id}/stock(id=${item.id})}" method="post" style="display:inline">
+                <input type="hidden" name="delta" value="1">
+                <input type="hidden" name="returnTo" value="/dashboard">
+                <button type="submit" class="btn-icon btn-icon--green">＋</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最近追加したアイテム -->
+      <div class="card card--full">
+        <div class="card-header">
+          <h2 class="card-title">最近追加したアイテム（写真一覧）</h2>
+          <a th:href="@{/photos}" class="link-muted">すべて見る ›</a>
+        </div>
+        <div class="photo-grid">
+          <a th:each="item : ${recentItems}"
+             th:href="@{/items/{id}(id=${item.id})}"
+             class="photo-item">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
+            <div th:unless="${item.imageUrl}" class="photo-placeholder">📦</div>
+            <div class="photo-label">
+              <span th:text="${item.name}">商品名</span>
+              <span th:if="${item.expiryDate}"
+                    th:class="'badge badge--' + ${item.expiryStatus} + ' badge--sm'"
+                    th:text="${item.daysUntilExpiry < 0 ? '期限切れ' :
+                               item.daysUntilExpiry == 0 ? '今日' :
+                               'あと' + item.daysUntilExpiry + '日'}">
+              </span>
+            </div>
+          </a>
+          <!-- 追加ボタン -->
+          <a th:href="@{/items/new}" class="photo-item photo-item--add">
+            <span class="photo-add-icon">＋</span>
+            <span>追加する</span>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /.dashboard-grid -->
+  </main>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
