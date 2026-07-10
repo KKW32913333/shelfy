@@ -344,11 +344,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   /* ボトムナビ（スマホ用） */
   .bottom-nav {
     display: flex; position: fixed; bottom: 0; left: 0; right: 0;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(12px);
     border-top: 1px solid var(--border);
     padding: 8px 0 24px; z-index: 100;
-    box-shadow: 0 -4px 20px rgba(0,0,0,.06);
+    box-shadow: 0 -4px 20px rgba(0,0,0,.07);
   }
   .bottom-nav-item {
     flex: 1; display: flex; flex-direction: column; align-items: center;
@@ -357,23 +357,42 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     padding: 4px 0; text-decoration: none;
     transition: color .2s;
     letter-spacing: 0.02em;
-  }
-  .bottom-nav-item:hover { color: var(--primary); }
-  .bottom-nav-item.active { color: var(--primary); font-weight: 700; }
-  .bottom-nav-center {
     position: relative;
   }
-  .bottom-nav-center span {
+  .bottom-nav-item span {
+    padding: 6px 10px;
+    border-radius: 12px;
+    transition: background .2s, color .2s;
+  }
+  .bottom-nav-item:hover span { color: var(--primary); }
+  .bottom-nav-item.active span {
+    color: var(--primary);
+    font-weight: 700;
+    background: #e0f2fe;
+  }
+  .bottom-nav-item.active::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 24px; height: 3px;
     background: var(--primary);
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 20px;
+    border-radius: 0 0 3px 3px;
+  }
+  .bottom-nav-center span {
+    background: var(--primary) !important;
+    color: #fff !important;
+    padding: 8px 18px !important;
+    border-radius: 20px !important;
     font-size: 12px;
     font-weight: 600;
     box-shadow: 0 4px 12px rgba(14,165,233,.35);
-    margin-top: -8px;
+    margin-top: -4px;
     display: inline-block;
   }
+  .bottom-nav-center.active span {
+    background: var(--primary-dark) !important;
+  }
+  .bottom-nav-center::after { display: none !important; }
 }
 @media (min-width: 769px) {
   .bottom-nav { display: none; }
