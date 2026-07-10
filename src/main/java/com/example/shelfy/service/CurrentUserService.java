@@ -57,8 +57,10 @@ public class CurrentUserService {
     }
 
     private Long autoDetectGroupId() {
+        org.slf4j.LoggerFactory.getLogger(CurrentUserService.class).info("AUTO_DETECT_GROUP called");
         try {
             Long userId = getCurrentUserId();
+            org.slf4j.LoggerFactory.getLogger(CurrentUserService.class).info("AUTO_DETECT userId={}", userId);
             List<Map<String, Object>> rows = linkleJdbc.queryForList(
                 "SELECT group_id FROM group_membership WHERE user_id = ? LIMIT 1", userId);
             if (rows.size() > 0) {
