@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログイン — Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-logo">🗄️</div>
+    <div class="login-title">Shelfy</div>
+
+    <div th:if="${param.error}" class="flash flash--error">
+      ユーザー名またはパスワードが正しくありません
+    </div>
+    <div th:if="${param.logout}" class="flash flash--success">
+      ログアウトしました
+    </div>
+
+    <form th:action="@{/login}" method="post">
+      <div class="form-group">
+        <label class="form-label">ユーザー名</label>
+        <input type="text" name="username" class="form-control" autofocus required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">パスワード</label>
+        <input type="password" name="password" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">
+        ログイン
+      </button>
+    </form>
+  </div>
+</div>
+</body>
+</html>
