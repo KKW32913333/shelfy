@@ -9,12 +9,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -54,13 +50,24 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // $2a と $2b 両方のBCryptハッシュに対応
-        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-        Map<String, PasswordEncoder> encoders = new HashMap<>();
-        encoders.put("bcrypt", bcrypt);
-        DelegatingPasswordEncoder delegating = new DelegatingPasswordEncoder("bcrypt", encoders);
-        delegating.setDefaultPasswordEncoderForMatches(bcrypt);
-        return delegating;
+        // $2a と $2b 両方に対応するカスタムエンコーダー
+        return new PasswordEncoder() {
+            private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            @Override
+            public String encode(CharSequence rawPassword) {
+                return encoder.encode(rawPassword);
+            }
+
+            @Override
+            public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                // $2b を $2a に置換してから照合
+                String normalized = encodedPassword.startsWith("$2b$")
+                        ? "$2a$" + encodedPassword.substring(4)
+                        : encodedPassword;
+                return encoder.matches(rawPassword, normalized);
+            }
+        };
     }
 
     @Bean
