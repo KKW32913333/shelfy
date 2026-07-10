@@ -52,6 +52,21 @@ public class CurrentUserService {
         return groupId;
     }
 
+    public Long getOrDetectGroupId(Long userId) {
+        try {
+            java.util.List<java.util.Map<String, Object>> rows = linkleJdbc.queryForList(
+                "SELECT group_id FROM group_membership WHERE user_id = ? LIMIT 1", userId);
+            if (rows.size() > 0) {
+                Long gid = ((Number) rows.get(0).get("group_id")).longValue();
+                org.slf4j.LoggerFactory.getLogger(CurrentUserService.class).info("getOrDetectGroupId result={}", gid);
+                return gid;
+            }
+        } catch (Exception e) {
+            org.slf4j.LoggerFactory.getLogger(CurrentUserService.class).error("getOrDetectGroupId error: {}", e.getMessage());
+        }
+        return null;
+    }
+
     public void setCurrentGroupId(Long groupId) {
         getSession().setAttribute(SESSION_GROUP_ID, groupId);
     }

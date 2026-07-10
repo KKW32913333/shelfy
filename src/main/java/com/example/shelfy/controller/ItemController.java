@@ -113,11 +113,9 @@ public class ItemController {
                        @org.springframework.web.bind.annotation.RequestParam(required = false) Long groupId,
                        RedirectAttributes ra) {
         Long userId = currentUserService.getCurrentUserId();
-        if (groupId != null) {
-            item.setGroupId(groupId);
-        } else {
-            item.setGroupId(currentUserService.getCurrentGroupId());
-        }
+        Long resolvedGroupId = groupId != null ? groupId : currentUserService.getOrDetectGroupId(userId);
+        System.out.println("SAVE resolvedGroupId=" + resolvedGroupId + " fromForm=" + groupId);
+        item.setGroupId(resolvedGroupId);
 
         boolean isNew = (item.getId() == null);
         if (isNew) item.setCreatedBy(userId);
