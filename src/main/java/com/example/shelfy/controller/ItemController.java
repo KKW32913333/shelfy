@@ -86,6 +86,7 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("isNew", true);
+        model.addAttribute("groupId", currentUserService.getCurrentGroupId());
         return "items/edit";
     }
 
@@ -99,6 +100,7 @@ public class ItemController {
         model.addAttribute("item", itemService.getById(id, groupId));
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("isNew", false);
+        model.addAttribute("groupId", groupId);
         return "items/edit";
     }
 
@@ -109,9 +111,10 @@ public class ItemController {
     @PostMapping("/items/save")
     public String save(@ModelAttribute ShelfyItem item,
                        RedirectAttributes ra) {
-        Long groupId  = currentUserService.getCurrentGroupId();
         Long userId   = currentUserService.getCurrentUserId();
-        item.setGroupId(groupId);
+        if (item.getGroupId() == null) {
+            item.setGroupId(currentUserService.getCurrentGroupId());
+        }
 
         boolean isNew = (item.getId() == null);
         if (isNew) item.setCreatedBy(userId);
