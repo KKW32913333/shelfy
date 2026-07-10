@@ -9,8 +9,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -40,7 +44,6 @@ public class SecurityConfig {
                 .permitAll()
             )
             .userDetailsService(userDetailsService)
-            // H2コンソール用（ローカルのみ）
             .headers(h -> h.frameOptions(f -> f.sameOrigin()))
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers("/h2-console/**", "/api/**")
@@ -51,7 +54,13 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        // $2a と $2b 両方のBCryptハッシュに対応
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+        Map<String, PasswordEncoder> encoders = new HashMap<>();
+        encoders.put("bcrypt", bcrypt);
+        DelegatingPasswordEncoder delegating = new DelegatingPasswordEncoder("bcrypt", encoders);
+        delegating.setDefaultPasswordEncoderForMatches(bcrypt);
+        return delegating;
     }
 
     @Bean
