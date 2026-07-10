@@ -72,7 +72,7 @@ public class CurrentUserService {
                 return ((Number) userRows.get(0).get("active_group_id")).longValue();
             }
         } catch (Exception e) {
-            // 取得失敗時はnullを返す
+            org.slf4j.LoggerFactory.getLogger(CurrentUserService.class).error("AUTO_DETECT_ERROR: {}", e.getMessage(), e);
         }
         return null;
     }
