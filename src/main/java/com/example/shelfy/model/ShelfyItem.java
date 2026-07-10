@@ -48,7 +48,6 @@ public class ShelfyItem {
     private int stock = 0;
 
     /** 補充目安（この数を下回るとアラート） */
-    @Column(nullable = false)
     @Column(name = "min_stock", nullable = false)
     private int minStock = 1;
 
@@ -70,7 +69,6 @@ public class ShelfyItem {
      * use_by      = 消費期限
      * null        = 期限なし（日用品など）
      */
-    @Column(length = 20)
     @Column(name = "expiry_type", length = 20)
     private String expiryType;
 
@@ -83,7 +81,6 @@ public class ShelfyItem {
     // =============================================
 
     /** メイン写真URL（Cloudflare R2） */
-    @Column(length = 500)
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
@@ -92,7 +89,6 @@ public class ShelfyItem {
     // =============================================
 
     /** Linkleの買い物リストに追加済みか */
-    @Column(nullable = false)
     @Column(name = "linked_to_shopping", nullable = false)
     private boolean linkedToShopping = false;
 
