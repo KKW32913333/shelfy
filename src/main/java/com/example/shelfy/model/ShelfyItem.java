@@ -25,7 +25,7 @@ public class ShelfyItem {
     private Long id;
 
     /** Linkleのgroup_idと共通 */
-    @Column(nullable = false)
+    @Column(name = "group_id", nullable = false)
     private Long groupId;
 
     /** 商品名 */
