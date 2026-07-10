@@ -7,7 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/header :: header('items')}"></div>
 <div class="layout">
   <div th:replace="~{fragments/sidebar :: sidebar('items')}"></div>
   <main class="main-content">
