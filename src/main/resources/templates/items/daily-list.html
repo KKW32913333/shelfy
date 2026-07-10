@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日用品管理 - Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header('items')}"></div>
+<div class="layout">
+  <div th:replace="~{fragments/sidebar :: sidebar('daily')}"></div>
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">日用品管理</h1>
+        <p class="page-subtitle">日用品の在庫を管理できます</p>
+      </div>
+      <a th:href="@{/items/new(category=daily)}" class="btn btn-primary">＋ アイテムを追加</a>
+    </div>
+    <div th:if="${success}" class="flash flash--success" th:text="${success}"></div>
+    <div class="card">
+      <div class="item-list">
+        <div th:if="${#lists.isEmpty(items)}" class="empty-state">
+          <p>日用品がまだ登録されていません</p>
+          <a th:href="@{/items/new(category=daily)}" class="btn btn-primary" style="margin-top:12px">最初のアイテムを追加</a>
+        </div>
+        <div th:each="item : ${items}" class="item-row">
+          <div class="item-thumb">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
+            <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">🧴</span>
+          </div>
+          <div class="item-info">
+            <div class="item-name" th:text="${item.name}">商品名</div>
+            <div class="item-meta" th:text="'補充目安：' + ${item.minStock} + '個'"></div>
+          </div>
+          <div class="item-badge">
+            <span th:class="'badge badge--' + ${item.stockStatus}"
+                  th:text="${item.stock} + '個'"></span>
+            <span th:if="${item.linkedToShopping}" class="badge badge--linkle">🛒Linkle</span>
+          </div>
+          <div class="item-actions">
+            <form th:action="@{/items/{id}/stock(id=${item.id})}" method="post" style="display:inline">
+              <input type="hidden" name="delta" value="-1">
+              <input type="hidden" name="returnTo" value="/daily">
+              <button type="submit" class="btn-icon">－</button>
+            </form>
+            <form th:action="@{/items/{id}/stock(id=${item.id})}" method="post" style="display:inline">
+              <input type="hidden" name="delta" value="1">
+              <input type="hidden" name="returnTo" value="/daily">
+              <button type="submit" class="btn-icon btn-icon--green">＋</button>
+            </form>
+            <a th:href="@{/items/{id}/edit(id=${item.id})}" class="btn-icon">✏️</a>
+            <form th:action="@{/items/{id}/delete(id=${item.id})}" method="post" style="display:inline"
+                  onsubmit="return confirm('削除しますか？')">
+              <input type="hidden" name="returnTo" value="/daily">
+              <button type="submit" class="btn-icon" style="color:var(--danger)">🗑</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
