@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Linkle共用ユーザー（Linkle DBのapp_userテーブルを参照）
- * Shelfy側では読み取り専用で使用
- */
 @Entity
 @Table(name = "app_user")
 @Getter
@@ -18,21 +14,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password_hash", nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "approved", nullable = false)
     private boolean approved = false;
 
-    @Column(nullable = false)
+    @Column(name = "admin", nullable = false)
     private boolean admin = false;
 
-    @Column(nullable = false)
+    @Column(name = "rejected", nullable = false)
     private boolean rejected = false;
 
-    /** 表示色（グループ内のバッジ色） */
-    private String color;
+    @Column(name = "color_index")
+    private Integer colorIndex;
+
+    @Column(name = "display_name")
+    private String displayName;
 }
