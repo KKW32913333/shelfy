@@ -110,9 +110,12 @@ public class ItemController {
 
     @PostMapping("/items/save")
     public String save(@ModelAttribute ShelfyItem item,
+                       @org.springframework.web.bind.annotation.RequestParam(required = false) Long groupId,
                        RedirectAttributes ra) {
-        Long userId   = currentUserService.getCurrentUserId();
-        if (item.getGroupId() == null) {
+        Long userId = currentUserService.getCurrentUserId();
+        if (groupId != null) {
+            item.setGroupId(groupId);
+        } else {
             item.setGroupId(currentUserService.getCurrentGroupId());
         }
 
