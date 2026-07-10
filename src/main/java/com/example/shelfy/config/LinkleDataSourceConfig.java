@@ -8,12 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.net.URI;
 
-/**
- * Linkle用DB（セカンダリ）
- * ・app_user / group / group_membership を読み取り（認証用）
- * ・shopping_item へ書き込み（在庫0連携）
- */
 @Configuration
 public class LinkleDataSourceConfig {
 
@@ -25,18 +21,31 @@ public class LinkleDataSourceConfig {
         HikariConfig config = new HikariConfig();
 
         if (linkleUrl != null && !linkleUrl.isBlank()) {
-            String jdbcUrl = convertToJdbc(linkleUrl);
-            config.setJdbcUrl(jdbcUrl);
-            config.setDriverClassName("org.postgresql.Driver");
-            config.addDataSourceProperty("ssl", "true");
-            config.addDataSourceProperty("sslmode", "require");
-            config.setMaximumPoolSize(2);
-            config.setMinimumIdle(1);
-            config.setConnectionTimeout(30000);
-            config.setMaxLifetime(1800000);
-            config.setPoolName("LinklePool");
+            try {
+                URI uri = new URI(linkleUrl.replace("postgresql://", "http://"));
+                String host     = uri.getHost();
+                int    port     = uri.getPort() == -1 ? 5432 : uri.getPort();
+                String db       = uri.getPath().replaceFirst("/", "");
+                String userInfo = uri.getUserInfo();
+                String user     = userInfo.split(":")[0];
+                String password = userInfo.contains(":") ? userInfo.split(":", 2)[1] : "";
+
+                String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + "/" + db
+                        + "?sslmode=require";
+
+                config.setJdbcUrl(jdbcUrl);
+                config.setUsername(user);
+                config.setPassword(password);
+                config.setDriverClassName("org.postgresql.Driver");
+                config.setMaximumPoolSize(2);
+                config.setMinimumIdle(1);
+                config.setConnectionTimeout(30000);
+                config.setMaxLifetime(1800000);
+                config.setPoolName("LinklePool");
+            } catch (Exception e) {
+                throw new RuntimeException("LINKLE_DATABASE_URLの解析に失敗しました: " + e.getMessage(), e);
+            }
         } else {
-            // ローカル開発時：Linkle DB未設定ならH2で代替
             config.setJdbcUrl("jdbc:h2:file:./data/linkle;AUTO_SERVER=TRUE");
             config.setDriverClassName("org.h2.Driver");
             config.setUsername("sa");
@@ -46,25 +55,8 @@ public class LinkleDataSourceConfig {
         return new HikariDataSource(config);
     }
 
-    /**
-     * Linkle DBへの生SQLアクセス用JdbcTemplate
-     * （JPA管理外のLinkleテーブルを操作）
-     */
     @Bean(name = "linkleJdbcTemplate")
     public JdbcTemplate linkleJdbcTemplate() {
         return new JdbcTemplate(linkleDataSource());
-    }
-
-    private String convertToJdbc(String url) {
-        if (url.startsWith("jdbc:")) return url;
-        String withoutScheme = url.replace("postgresql://", "");
-        String[] atParts = withoutScheme.split("@", 2);
-        String credentials = atParts[0];
-        String hostAndDb = atParts[1];
-        String[] credParts = credentials.split(":", 2);
-        String user = credParts[0];
-        String password = credParts.length > 1 ? credParts[1] : "";
-        return "jdbc:postgresql://" + hostAndDb + "?user=" + user
-                + "&password=" + password + "&sslmode=require";
     }
 }
