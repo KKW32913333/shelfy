@@ -25,9 +25,12 @@ public class PhotoListController {
     public String photos(@RequestParam(required = false) String category, Model model) {
         Long groupId = currentUserService.getCurrentGroupId();
 
-        List<ShelfyItem> items = (category != null && !category.isBlank())
+        List<ShelfyItem> allItems = (category != null && !category.isBlank())
             ? itemRepository.findByGroupIdAndCategoryOrderByUpdatedAtDesc(groupId, category)
             : itemRepository.findByGroupIdOrderByUpdatedAtDesc(groupId);
+        List<ShelfyItem> items = allItems.stream()
+            .filter(i -> i.getImageUrl() != null && !i.getImageUrl().isBlank())
+            .collect(java.util.stream.Collectors.toList());
 
         model.addAttribute("items", items);
         model.addAttribute("category", category);
