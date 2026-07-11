@@ -54,22 +54,28 @@ public class WebPushService {
         if (vapidPublicKey == null || vapidPublicKey.isBlank()) return;
 
         LocalDate today = LocalDate.now();
-        LocalDate in3Days = today.plusDays(3);
         LocalDate in7Days = today.plusDays(7);
 
         List<ShelfyItem> allItems = itemRepository.findAll();
 
         for (ShelfyItem item : allItems) {
-            if (item.getExpiryDate() == null) continue;
-
             String message = null;
 
-            if (item.getExpiryDate().isBefore(today)) {
+            // 在庫が0になったもの
+            if (item.getStock() <= 0) {
+                message = "【在庫切れ】" + item.getName() + "の在庫がなくなりました";
+            }
+
+            // 期限切れ
+            if (item.getExpiryDate() != null && item.getExpiryDate().isBefore(today)) {
                 message = "【期限切れ】" + item.getName() + "の期限が切れています";
-            } else if (!item.getExpiryDate().isAfter(in3Days)) {
+            }
+
+            // 7日以内に期限が来るもの
+            if (item.getExpiryDate() != null
+                    && !item.getExpiryDate().isBefore(today)
+                    && !item.getExpiryDate().isAfter(in7Days)) {
                 message = "【期限間近】" + item.getName() + "の期限まであと" + item.getDaysUntilExpiry() + "日です";
-            } else if (!item.getExpiryDate().isAfter(in7Days)) {
-                message = "【期限注意】" + item.getName() + "の期限まであと" + item.getDaysUntilExpiry() + "日です";
             }
 
             if (message != null) {
