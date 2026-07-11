@@ -29,6 +29,16 @@
       color: var(--text);
     }
   </style>
+<script>
+function shelfyOpenMenu() {
+  document.getElementById('side-overlay').style.display = 'block';
+  document.getElementById('side-panel').style.transform = 'translateX(0)';
+}
+function shelfyCloseMenu() {
+  document.getElementById('side-overlay').style.display = 'none';
+  document.getElementById('side-panel').style.transform = 'translateX(-100%)';
+}
+</script>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header('daily')}"></div>

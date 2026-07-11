@@ -17,6 +17,16 @@
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <meta name="theme-color" content="#0ea5e9">
+<script>
+function shelfyOpenMenu() {
+  document.getElementById('side-overlay').style.display = 'block';
+  document.getElementById('side-panel').style.transform = 'translateX(0)';
+}
+function shelfyCloseMenu() {
+  document.getElementById('side-overlay').style.display = 'none';
+  document.getElementById('side-panel').style.transform = 'translateX(-100%)';
+}
+</script>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header('alerts')}"></div>

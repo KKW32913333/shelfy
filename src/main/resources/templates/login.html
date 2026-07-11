@@ -35,6 +35,16 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
   </style>
+<script>
+function shelfyOpenMenu() {
+  document.getElementById('side-overlay').style.display = 'block';
+  document.getElementById('side-panel').style.transform = 'translateX(0)';
+}
+function shelfyCloseMenu() {
+  document.getElementById('side-overlay').style.display = 'none';
+  document.getElementById('side-panel').style.transform = 'translateX(-100%)';
+}
+</script>
 </head>
 <body>
 <div class="login-wrapper">
