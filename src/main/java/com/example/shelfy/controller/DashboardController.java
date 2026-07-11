@@ -17,13 +17,16 @@ public class DashboardController {
     private final ShelfyItemService itemService;
     private final CurrentUserService currentUserService;
     private final JdbcTemplate linkleJdbc;
+    private final com.example.shelfy.service.ScoreService scoreService;
 
     public DashboardController(ShelfyItemService itemService,
                                CurrentUserService currentUserService,
-                               @Qualifier("linkleJdbcTemplate") JdbcTemplate linkleJdbc) {
+                               @Qualifier("linkleJdbcTemplate") JdbcTemplate linkleJdbc,
+                               com.example.shelfy.service.ScoreService scoreService) {
         this.itemService = itemService;
         this.currentUserService = currentUserService;
         this.linkleJdbc = linkleJdbc;
+        this.scoreService = scoreService;
     }
 
     @GetMapping({"/", "/dashboard"})
@@ -54,6 +57,12 @@ public class DashboardController {
         model.addAttribute("lowStockItems", itemService.getLowStockItems(groupId));
         model.addAttribute("recentItems",   itemService.getRecentItems(groupId, 3));
         model.addAttribute("categoryCount", itemService.getCategoryCount(groupId));
+        try {
+            com.example.shelfy.model.ShelfyScore score = scoreService.getOrCreate(groupId);
+            model.addAttribute("currentScore", score.getScore());
+        } catch (Exception e) {
+            model.addAttribute("currentScore", 0);
+        }
         return "dashboard";
     }
 

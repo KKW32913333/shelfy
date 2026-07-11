@@ -1,15 +1,18 @@
 package com.example.shelfy.controller;
 
 import com.example.shelfy.model.ConsumptionLog;
+import com.example.shelfy.model.ShelfyBadge;
 import com.example.shelfy.model.ShelfyItem;
 import com.example.shelfy.repository.ConsumptionLogRepository;
 import com.example.shelfy.service.CurrentUserService;
+import com.example.shelfy.service.ScoreService;
 import com.example.shelfy.service.ShelfyItemService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.List;
 
 @Controller
 public class ConsumptionController {
@@ -17,13 +20,16 @@ public class ConsumptionController {
     private final ConsumptionLogRepository consumptionRepo;
     private final ShelfyItemService itemService;
     private final CurrentUserService currentUserService;
+    private final ScoreService scoreService;
 
     public ConsumptionController(ConsumptionLogRepository consumptionRepo,
                                   ShelfyItemService itemService,
-                                  CurrentUserService currentUserService) {
+                                  CurrentUserService currentUserService,
+                                  ScoreService scoreService) {
         this.consumptionRepo = consumptionRepo;
         this.itemService = itemService;
         this.currentUserService = currentUserService;
+        this.scoreService = scoreService;
     }
 
     @PostMapping("/items/{id}/consume")
@@ -49,7 +55,12 @@ public class ConsumptionController {
         item.setUpdatedBy(userId);
         itemService.save(item);
 
-        ra.addFlashAttribute("success", item.getName() + "を使い切りました");
+        List<ShelfyBadge> newBadges = scoreService.addConsumption(groupId, quantity);
+        String msg = item.getName() + "を使い切りました (+10pt)";
+        if (!newBadges.isEmpty()) {
+            msg += " 🎉 " + newBadges.get(0).getBadgeName() + " を獲得！";
+        }
+        ra.addFlashAttribute("success", msg);
         return "redirect:" + returnTo;
     }
 
