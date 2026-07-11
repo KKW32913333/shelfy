@@ -91,6 +91,13 @@
       <version>0.4.20</version>
     </dependency>
 
+    <!-- AWS S3 SDK（Cloudflare R2対応） -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>s3</artifactId>
+      <version>2.25.60</version>
+    </dependency>
+
     <!-- Test -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
