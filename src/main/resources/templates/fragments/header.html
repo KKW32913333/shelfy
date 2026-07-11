@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+</head>
 <body>
 <header th:fragment="header(activePage)" class="app-header">
   <div class="header-inner">
+    <button class="header-icon-btn" onclick="history.back()" aria-label="戻る">
+      <i class="ti ti-chevron-left" style="font-size:22px; color:var(--text-muted);"></i>
+    </button>
     <a th:href="@{/dashboard}" class="header-logo">
-      <span class="logo-icon">🗄️</span>
       <span class="logo-text">Shelfy</span>
     </a>
-    <div class="header-actions">
-      <a th:href="@{/alerts}" class="header-icon-btn" title="アラート">
-        🔔
-      </a>
-      <div class="user-menu">
-        <span sec:authentication="name" class="user-name"></span>
-        <a th:href="@{/logout}" class="btn btn-sm">ログアウト</a>
-      </div>
-    </div>
+    <a th:href="@{/logout}" class="header-icon-btn" aria-label="ログアウト">
+      <i class="ti ti-logout" style="font-size:20px; color:var(--text-muted);"></i>
+    </a>
   </div>
 </header>
 </body>
