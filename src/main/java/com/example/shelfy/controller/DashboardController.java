@@ -40,6 +40,15 @@ public class DashboardController {
             }
             currentUserService.setCurrentGroupId(groupId);
         }
+        try {
+            java.util.List<java.util.Map<String, Object>> groupInfo = linkleJdbc.queryForList(
+                "SELECT name FROM app_group WHERE id = ?", groupId);
+            if (!groupInfo.isEmpty()) {
+                model.addAttribute("groupName", groupInfo.get(0).get("name"));
+            }
+        } catch (Exception e) {
+            model.addAttribute("groupName", "");
+        }
         model.addAttribute("stats",         itemService.getDashboardStats(groupId));
         model.addAttribute("expiringItems", itemService.getExpiringItems(groupId));
         model.addAttribute("lowStockItems", itemService.getLowStockItems(groupId));

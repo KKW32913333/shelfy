@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>グループ選択 - Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header('groups')}"></div>
+<div class="layout">
+  <div th:replace="~{fragments/sidebar :: sidebar('groups')}"></div>
+  <main class="main-content" style="padding-bottom:100px;">
+
+    <div style="margin-bottom:16px;">
+      <h1 style="font-size:18px; font-weight:700; color:var(--text); margin:0;">グループ選択</h1>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Linkleのグループと連携しています</p>
+    </div>
+
+    <div th:if="${error}" class="flash flash--error" th:text="${error}"></div>
+    <div th:if="${success}" class="flash flash--success" th:text="${success}"></div>
+
+    <div class="card">
+      <div class="item-list">
+        <div th:if="${#lists.isEmpty(groups)}" class="empty-state">
+          <i class="ti ti-users" style="font-size:40px; color:var(--text-muted);"></i>
+          <p style="margin-top:12px;">参加しているグループがありません</p>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Linkleでグループに参加してください</p>
+        </div>
+
+        <div th:each="group : ${groups}"
+             style="display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border);">
+          <div style="width:44px; height:44px; background:#e0f2fe; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <i class="ti ti-users" style="font-size:22px; color:#0ea5e9;"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-weight:600; font-size:15px; color:var(--text);" th:text="${group.name}"></div>
+            <div th:if="${group.id == currentGroupId}"
+                 style="font-size:11px; color:#16a34a; font-weight:600; margin-top:2px;">
+              <i class="ti ti-check" style="font-size:11px;"></i> 現在選択中
+            </div>
+          </div>
+          <form th:if="${group.id != currentGroupId}"
+                th:action="@{/groups/select}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="groupId" th:value="${group.id}">
+            <button type="submit"
+                    style="background:#0ea5e9; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer;">
+              選択
+            </button>
+          </form>
+          <span th:if="${group.id == currentGroupId}"
+                style="background:#dcfce7; color:#16a34a; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:600;">
+            選択中
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<nav class="bottom-nav">
+  <a href="/daily" class="bottom-nav-item">
+    <i class="ti ti-package nav-icon" aria-hidden="true"></i>
+    <span>日用品</span>
+  </a>
+  <a href="/food" class="bottom-nav-item">
+    <i class="ti ti-salad nav-icon" aria-hidden="true"></i>
+    <span>食品</span>
+  </a>
+  <a href="/dashboard" class="bottom-nav-center">
+    <div class="nav-home-btn"><i class="ti ti-home" aria-hidden="true"></i></div>
+    <span>ホーム</span>
+  </a>
+  <a href="/photos" class="bottom-nav-item">
+    <i class="ti ti-photo nav-icon" aria-hidden="true"></i>
+    <span>写真一覧</span>
+  </a>
+  <a href="/items/new" class="bottom-nav-item">
+    <i class="ti ti-plus nav-icon" aria-hidden="true"></i>
+    <span>追加</span>
+  </a>
+</nav>
+</body>
+</html>
