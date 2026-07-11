@@ -132,9 +132,13 @@ public class ItemController {
         if (isNew) item.setCreatedBy(userId);
         item.setUpdatedBy(userId);
 
-        itemService.save(item);
+        ShelfyItem saved = itemService.save(item);
 
-        ra.addFlashAttribute("success", isNew ? "登録しました" : "更新しました");
+        if (isNew) {
+            ra.addFlashAttribute("success", "登録しました。写真を追加できます");
+            return "redirect:/items/" + saved.getId();
+        }
+        ra.addFlashAttribute("success", "更新しました");
         return "redirect:/" + (item.isDaily() ? "daily" : "food");
     }
 
