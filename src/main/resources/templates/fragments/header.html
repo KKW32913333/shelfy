@@ -7,7 +7,7 @@
 <body>
 <header th:fragment="header(activePage)" class="app-header">
   <div class="header-inner">
-    <button class="header-icon-btn" id="menu-open-btn" aria-label="メニュー" style="background:none;border:none;cursor:pointer;">
+    <button class="header-icon-btn" aria-label="メニュー" style="background:none;border:none;cursor:pointer;" onclick="shelfyOpenMenu()">
       <i class="ti ti-menu-2" style="font-size:22px; color:#94a3b8;"></i>
     </button>
     <a th:href="@{/dashboard}" class="header-logo" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
@@ -31,7 +31,7 @@
 </header>
 
 <!-- オーバーレイ -->
-<div id="side-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200;" onclick="closeMenu()"></div>
+<div id="side-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200;" onclick="shelfyCloseMenu()"></div>
 
 <!-- サイドパネル -->
 <div id="side-panel" style="position:fixed; top:0; left:0; bottom:0; width:280px; background:#fff; z-index:201; transform:translateX(-100%); transition:transform .25s ease; display:flex; flex-direction:column; box-shadow:4px 0 20px rgba(0,0,0,.12);">
@@ -50,7 +50,7 @@
       </div>
       <span style="font-size:17px;font-weight:700;color:#1e293b;">Shelfy</span>
     </div>
-    <button onclick="closeMenu()" style="background:none;border:none;cursor:pointer;padding:4px;">
+    <button onclick="shelfyCloseMenu()" style="background:none;border:none;cursor:pointer;padding:4px;">
       <i class="ti ti-x" style="font-size:22px; color:#94a3b8;"></i>
     </button>
   </div>
@@ -87,18 +87,14 @@
 </div>
 
 <script>
-function openMenu() {
+function shelfyOpenMenu() {
   document.getElementById('side-overlay').style.display = 'block';
   document.getElementById('side-panel').style.transform = 'translateX(0)';
 }
-function closeMenu() {
+function shelfyCloseMenu() {
   document.getElementById('side-overlay').style.display = 'none';
   document.getElementById('side-panel').style.transform = 'translateX(-100%)';
 }
-document.addEventListener('DOMContentLoaded', function() {
-  var btn = document.getElementById('menu-open-btn');
-  if (btn) btn.addEventListener('click', openMenu);
-});
 </script>
 </body>
 </html>
