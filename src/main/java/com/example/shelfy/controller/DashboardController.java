@@ -52,7 +52,7 @@ public class DashboardController {
         model.addAttribute("stats",         itemService.getDashboardStats(groupId));
         model.addAttribute("expiringItems", itemService.getExpiringItems(groupId));
         model.addAttribute("lowStockItems", itemService.getLowStockItems(groupId));
-        model.addAttribute("recentItems",   itemService.getRecentItems(groupId, 8));
+        model.addAttribute("recentItems",   itemService.getRecentItems(groupId, 3));
         model.addAttribute("categoryCount", itemService.getCategoryCount(groupId));
         return "dashboard";
     }
