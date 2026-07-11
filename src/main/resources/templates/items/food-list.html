@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <meta name="theme-color" content="#0ea5e9">
   <link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header('items')}"></div>
@@ -67,11 +68,26 @@
   </main>
 </div>
 <nav class="bottom-nav">
-  <a href="/daily" class="bottom-nav-item"><span>日用品</span></a>
-  <a href="/food" class="bottom-nav-item active"><span>食品</span></a>
-  <a href="/dashboard" class="bottom-nav-item bottom-nav-center"><span>ホーム</span></a>
-  <a href="/alerts" class="bottom-nav-item"><span>アラート</span></a>
-  <a href="/items/new" class="bottom-nav-item"><span>追加</span></a>
+  <a href="/daily" class="bottom-nav-item">
+    <i class="ti ti-package nav-icon" aria-hidden="true"></i>
+    <span>日用品</span>
+  </a>
+  <a href="/food" class="bottom-nav-item active">
+    <i class="ti ti-salad nav-icon" aria-hidden="true"></i>
+    <span>食品</span>
+  </a>
+  <a href="/dashboard" class="bottom-nav-center">
+    <div class="nav-home-btn"><i class="ti ti-home" aria-hidden="true"></i></div>
+    <span>ホーム</span>
+  </a>
+  <a href="/alerts" class="bottom-nav-item">
+    <i class="ti ti-bell nav-icon" aria-hidden="true"></i>
+    <span>アラート</span>
+  </a>
+  <a href="/items/new" class="bottom-nav-item">
+    <i class="ti ti-plus nav-icon" aria-hidden="true"></i>
+    <span>追加</span>
+  </a>
 </nav>
 </body>
 </html>

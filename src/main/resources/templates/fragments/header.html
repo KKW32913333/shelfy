@@ -7,13 +7,14 @@
 <body>
 <header th:fragment="header(activePage)" class="app-header">
   <div class="header-inner">
-    <button class="header-icon-btn" onclick="history.back()" aria-label="戻る">
+    <button th:if="${activePage != 'dashboard'}" class="header-icon-btn" onclick="history.back()" aria-label="戻る" style="background:none;border:none;cursor:pointer;">
       <i class="ti ti-chevron-left" style="font-size:22px; color:var(--text-muted);"></i>
     </button>
+    <span th:if="${activePage == 'dashboard'}" style="width:36px;"></span>
     <a th:href="@{/dashboard}" class="header-logo">
       <span class="logo-text">Shelfy</span>
     </a>
-    <a th:href="@{/logout}" class="header-icon-btn" aria-label="ログアウト">
+    <a th:href="@{/logout}" class="header-icon-btn" aria-label="ログアウト" style="text-decoration:none;">
       <i class="ti ti-logout" style="font-size:20px; color:var(--text-muted);"></i>
     </a>
   </div>
