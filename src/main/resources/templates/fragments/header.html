@@ -5,20 +5,30 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 </head>
 <body>
-<header th:fragment="header(activePage)" class="app-header app-header--dark">
+<header th:fragment="header(activePage)" class="app-header">
   <div class="header-inner">
 
     <button class="header-icon-btn" onclick="document.getElementById('side-menu').classList.add('open')" aria-label="メニュー" style="background:none;border:none;cursor:pointer;">
-      <i class="ti ti-menu-2" style="font-size:22px; color:#475569;"></i>
+      <i class="ti ti-menu-2" style="font-size:22px; color:#94a3b8;"></i>
     </button>
 
-    <a th:href="@{/dashboard}" class="header-logo" style="text-decoration:none;">
-      <span style="font-size:24px; font-weight:900; color:#fbbf24; letter-spacing:-1px; font-style:italic; line-height:1;">S</span>
-      <span style="font-size:16px; font-weight:600; color:#e2e8f0; letter-spacing:2px;">HELFY</span>
+    <a th:href="@{/dashboard}" class="header-logo" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <div style="display:flex;gap:3px;">
+          <div style="width:5px;height:5px;background:#fbbf24;border-radius:1px;"></div>
+          <div style="width:5px;height:5px;background:#fbbf24;border-radius:1px;"></div>
+        </div>
+        <div style="width:13px;height:1.5px;background:#e2e8f0;border-radius:1px;"></div>
+        <div style="display:flex;gap:3px;">
+          <div style="width:5px;height:5px;background:#94a3b8;border-radius:1px;"></div>
+          <div style="width:5px;height:5px;background:#fbbf24;border-radius:1px;"></div>
+        </div>
+      </div>
+      <span style="font-size:19px;font-weight:700;color:#1e293b;letter-spacing:-0.3px;">Shelfy</span>
     </a>
 
     <a th:href="@{/alerts}" class="header-icon-btn" aria-label="アラート" style="text-decoration:none;">
-      <i class="ti ti-bell" style="font-size:22px; color:#475569;"></i>
+      <i class="ti ti-bell" style="font-size:22px; color:#94a3b8;"></i>
     </a>
 
   </div>
@@ -27,9 +37,19 @@
 <div id="side-menu" class="side-menu-overlay" onclick="this.classList.remove('open')">
   <div class="side-menu-panel" onclick="event.stopPropagation()">
     <div class="side-menu-header">
-      <div style="display:flex; align-items:center; gap:4px;">
-        <span style="font-size:22px; font-weight:900; color:#fbbf24; letter-spacing:-1px; font-style:italic;">S</span>
-        <span style="font-size:14px; font-weight:600; color:var(--text); letter-spacing:2px;">HELFY</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <div style="display:flex;gap:3px;">
+            <div style="width:5px;height:5px;background:#fbbf24;border-radius:1px;"></div>
+            <div style="width:5px;height:5px;background:#fbbf24;border-radius:1px;"></div>
+          </div>
+          <div style="width:13px;height:1.5px;background:#e2e8f0;border-radius:1px;"></div>
+          <div style="display:flex;gap:3px;">
+            <div style="width:5px;height:5px;background:#94a3b8;border-radius:1px;"></div>
+            <div style="width:5px;height:5px;background:#fbbf24;border-radius:1px;"></div>
+          </div>
+        </div>
+        <span style="font-size:17px;font-weight:700;color:#1e293b;letter-spacing:-0.3px;">Shelfy</span>
       </div>
       <button onclick="document.getElementById('side-menu').classList.remove('open')" style="background:none;border:none;cursor:pointer;">
         <i class="ti ti-x" style="font-size:22px; color:var(--text-muted);"></i>
