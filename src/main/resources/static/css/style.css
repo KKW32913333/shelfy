@@ -434,3 +434,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   box-shadow: 0 4px 12px rgba(0,0,0,.1);
 }
 .stat-ti { font-size: 28px; color: var(--primary); }
+
+.app-header--dark {
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+}
+.app-header--dark .header-logo {
+  display: flex; align-items: baseline; gap: 3px;
+}
