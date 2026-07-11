@@ -189,5 +189,26 @@ function shelfyCloseMenu() {
     <span>追加</span>
   </a>
 </nav>
+
+<div id="side-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200;" onclick="shelfyCloseMenu()"></div>
+<div id="side-panel" style="position:fixed; top:0; left:0; bottom:0; width:280px; background:#fff; z-index:201; transform:translateX(-100%); transition:transform .25s ease; display:flex; flex-direction:column; box-shadow:4px 0 20px rgba(0,0,0,.12);">
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 20px 16px; border-bottom:1px solid #f1f5f9; margin-top:60px;">
+    <span style="font-size:17px; font-weight:700; color:#1e293b;">Shelfy</span>
+    <button onclick="shelfyCloseMenu()" style="background:none;border:none;cursor:pointer;padding:4px;"><i class="ti ti-x" style="font-size:22px; color:#94a3b8;"></i></button>
+  </div>
+  <nav style="padding:12px 0; flex:1; overflow-y:auto;">
+    <a href="/score" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-medal" style="font-size:20px;color:#f59e0b;"></i>スコア・バッジ</a>
+    <a href="/groups" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-users" style="font-size:20px;color:#94a3b8;"></i>グループ選択</a>
+    <a href="/shopping" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-shopping-cart" style="font-size:20px;color:#94a3b8;"></i>買い物リスト</a>
+    <a href="/consumption" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-history" style="font-size:20px;color:#94a3b8;"></i>消費ログ</a>
+    <a href="/report" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-chart-pie" style="font-size:20px;color:#94a3b8;"></i>月次レポート</a>
+    <a href="/dashboard" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-home" style="font-size:20px;color:#94a3b8;"></i>ホーム</a>
+    <a href="/daily" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-package" style="font-size:20px;color:#94a3b8;"></i>日用品管理</a>
+    <a href="/food" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-salad" style="font-size:20px;color:#94a3b8;"></i>食品・調味料管理</a>
+    <a href="/alerts" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-bell" style="font-size:20px;color:#94a3b8;"></i>アラート</a>
+    <div style="height:1px;background:#f1f5f9;margin:8px 0;"></div>
+    <a href="/logout" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#ef4444;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-logout" style="font-size:20px;color:#ef4444;"></i>ログアウト</a>
+  </nav>
+</div>
 </body>
 </html>
