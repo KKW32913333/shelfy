@@ -116,12 +116,12 @@
       <!-- 在庫不足アイテム + カテゴリ別 -->
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">在庫が少ないアイテム</h2>
+          <h2 class="card-title">在庫切れアイテム</h2>
           <a th:href="@{/daily}" class="link-muted">すべて見る ›</a>
         </div>
         <div class="item-list">
           <div th:if="${#lists.isEmpty(lowStockItems)}" class="empty-state">
-            <p>在庫不足のアイテムはありません ✅</p>
+            <p>在庫切れのアイテムはありません ✅</p>
           </div>
           <div th:each="item : ${lowStockItems}" class="item-row">
             <div class="item-thumb">

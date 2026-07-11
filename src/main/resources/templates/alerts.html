@@ -92,19 +92,19 @@
       </div>
     </div>
 
-    <!-- 在庫不足 -->
+    <!-- 在庫切れ -->
     <div class="card" style="margin-bottom:80px;">
       <div class="card-header" style="background:#ffedd5;">
         <div style="display:flex;align-items:center;gap:8px;">
           <i class="ti ti-package" style="color:#ea580c;font-size:18px;"></i>
-          <h2 class="card-title" style="color:#ea580c;">在庫不足</h2>
+          <h2 class="card-title" style="color:#ea580c;">在庫切れ</h2>
         </div>
         <span class="badge badge--low" th:text="${lowStockItems.size()} + '件'"></span>
       </div>
       <div class="item-list">
         <div th:if="${#lists.isEmpty(lowStockItems)}" class="empty-state">
           <i class="ti ti-circle-check" style="font-size:32px;color:var(--success);"></i>
-          <p style="margin-top:8px;">在庫不足のアイテムはありません</p>
+          <p style="margin-top:8px;">在庫切れのアイテムはありません</p>
         </div>
         <a th:each="item : ${lowStockItems}"
            th:href="@{/items/{id}(id=${item.id})}"

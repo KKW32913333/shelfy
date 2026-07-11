@@ -77,8 +77,8 @@ public interface ShelfyItemRepository extends JpaRepository<ShelfyItem, Long> {
     @Query("""
         SELECT i FROM ShelfyItem i
         WHERE i.groupId = :groupId
-          AND i.stock < i.minStock
-        ORDER BY i.stock ASC
+          AND i.stock <= 0
+        ORDER BY i.updatedAt DESC
     """)
     List<ShelfyItem> findLowStockItems(@Param("groupId") Long groupId);
 
