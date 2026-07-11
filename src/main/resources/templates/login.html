@@ -9,17 +9,62 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <meta name="theme-color" content="#0ea5e9">
   <link rel="stylesheet" th:href="@{/css/style.css}">
+  <style>
+    body { background: linear-gradient(135deg, #f0f9ff 0%, #fef9c3 100%); min-height: 100vh; }
+    .login-wrapper { align-items: flex-start; padding-top: 60px; }
+    .login-card {
+      border: none;
+      box-shadow: 0 8px 40px rgba(0,0,0,.10);
+      border-radius: 20px;
+      padding: 44px 36px 36px;
+    }
+    .login-logo-wrap {
+      display: flex; flex-direction: column; align-items: center; margin-bottom: 28px;
+    }
+    .login-logo-img {
+      width: 72px; height: 72px; border-radius: 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      margin-bottom: 12px;
+    }
+    .login-brand {
+      font-size: 26px; font-weight: 800;
+      background: linear-gradient(135deg, #f59e0b, #0ea5e9);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .login-tagline {
+      font-size: 12px; color: var(--text-muted); margin-top: 2px; text-align: center;
+    }
+    .form-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .form-control {
+      border-radius: 10px; padding: 10px 14px; font-size: 15px;
+      border: 1.5px solid var(--border);
+    }
+    .form-control:focus { border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14,165,233,.12); }
+    .btn-login {
+      width: 100%; margin-top: 10px; padding: 12px;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      color: #fff; border: none; border-radius: 12px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(14,165,233,.35);
+      transition: opacity .2s;
+    }
+    .btn-login:hover { opacity: .9; }
+  </style>
 </head>
 <body>
 <div class="login-wrapper">
   <div class="login-card">
-    <div class="login-logo">🗄️</div>
-    <div class="login-title">Shelfy</div>
+    <div class="login-logo-wrap">
+      <img src="/icons/apple-touch-icon.png" class="login-logo-img" alt="Shelfy">
+      <div class="login-brand">Shelfy</div>
+      <div class="login-tagline">在庫管理をもっとかんたんに</div>
+    </div>
 
-    <div th:if="${param.error}" class="flash flash--error">
+    <div th:if="${param.error}" class="flash flash--error" style="margin-bottom:16px">
       ユーザー名またはパスワードが正しくありません
     </div>
-    <div th:if="${param.logout}" class="flash flash--success">
+    <div th:if="${param.logout}" class="flash flash--success" style="margin-bottom:16px">
       ログアウトしました
     </div>
 
@@ -27,15 +72,13 @@
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
       <div class="form-group">
         <label class="form-label">ユーザー名</label>
-        <input type="text" name="username" class="form-control" autofocus required>
+        <input type="text" name="username" class="form-control" autofocus required placeholder="ユーザー名を入力">
       </div>
-      <div class="form-group">
+      <div class="form-group" style="margin-top:14px">
         <label class="form-label">パスワード</label>
-        <input type="password" name="password" class="form-control" required>
+        <input type="password" name="password" class="form-control" required placeholder="パスワードを入力">
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">
-        ログイン
-      </button>
+      <button type="submit" class="btn-login">ログイン</button>
     </form>
   </div>
 </div>
