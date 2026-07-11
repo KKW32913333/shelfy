@@ -4,7 +4,7 @@
   "description": "棚の在庫をかんたん管理",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#f8fafc",
+  "background_color": "#ffffff",
   "theme_color": "#0ea5e9",
   "lang": "ja",
   "icons": [
@@ -31,5 +31,6 @@
       "sizes": "180x180",
       "type": "image/png"
     }
-  ]
+  ],
+  "splash_pages": null
 }
