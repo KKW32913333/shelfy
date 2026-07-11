@@ -238,12 +238,15 @@ function urlBase64ToUint8Array(base64String) {
 async function requestPush() {
   await registerPush();
   document.getElementById('push-banner').style.display = 'none';
+  localStorage.setItem('push_registered', 'true');
 }
 
 window.addEventListener('load', function() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-  if (Notification.permission === 'default') {
+  if (Notification.permission === 'default' && !localStorage.getItem('push_registered')) {
     document.getElementById('push-banner').style.display = 'flex';
+  } else {
+    document.getElementById('push-banner').style.display = 'none';
   }
 });
 </script>
