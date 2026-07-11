@@ -45,7 +45,7 @@
     <!-- カテゴリ別消費グラフ -->
     <div th:if="${!categoryCount.isEmpty()}" style="background:#fff; border-radius:12px; border:0.5px solid var(--border); padding:16px; margin-bottom:16px;">
       <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:12px;">カテゴリ別消費数</div>
-      <canvas id="categoryChart" height="200"></canvas>
+      <canvas id="categoryChart" style="max-height:200px; width:100%;"></canvas>
     </div>
 
     <!-- 消費ログ -->
@@ -120,7 +120,13 @@ if (Object.keys(categoryData).length > 0) {
     },
     options: {
       responsive: true,
-      plugins: { legend: { position: 'bottom' } }
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: window.innerWidth < 768 ? 11 : 13 }, boxWidth: 12, padding: 8 }
+        }
+      }
     }
   });
 }
