@@ -156,7 +156,8 @@ public class ItemController {
                               RedirectAttributes ra) {
         Long groupId = currentUserService.getCurrentGroupId();
         Long userId  = currentUserService.getCurrentUserId();
-        itemService.updateStock(id, groupId, delta, userId);
+        String username = currentUserService.getCurrentUser().getUsername();
+        itemService.updateStock(id, groupId, delta, userId, username);
         ra.addFlashAttribute("success", "在庫数を更新しました");
         return "redirect:" + returnTo;
     }

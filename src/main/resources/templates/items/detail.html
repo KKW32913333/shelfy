@@ -105,9 +105,25 @@
           <span class="detail-label">購入日</span>
           <span class="detail-value" th:text="${#temporals.format(item.purchaseDate,'yyyy/MM/dd')}"></span>
         </div>
+        <div th:if="${item.openedDate}" class="detail-row">
+          <span class="detail-label">開封日</span>
+          <span class="detail-value" th:text="${#temporals.format(item.openedDate,'yyyy/MM/dd')}"></span>
+        </div>
+        <div th:if="${item.storageLocation}" class="detail-row">
+          <span class="detail-label">保管場所</span>
+          <span class="detail-value" th:text="${item.storageLocation}"></span>
+        </div>
         <div th:if="${item.memo}" class="detail-row">
           <span class="detail-label">メモ</span>
           <span class="detail-value" th:text="${item.memo}"></span>
+        </div>
+        <div th:if="${item.updatedByName}" class="detail-row">
+          <span class="detail-label">最終更新者</span>
+          <span class="detail-value" th:text="${item.updatedByName}"></span>
+        </div>
+        <div th:if="${item.updatedAt}" class="detail-row">
+          <span class="detail-label">最終更新日時</span>
+          <span class="detail-value" th:text="${#temporals.format(item.updatedAt,'yyyy/MM/dd HH:mm')}"></span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Linkle連携</span>

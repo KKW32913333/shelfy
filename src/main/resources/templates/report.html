@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>月次レポート - Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header('report')}"></div>
+<div class="layout">
+  <div th:replace="~{fragments/sidebar :: sidebar('report')}"></div>
+  <main class="main-content" style="padding-bottom:100px;">
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <h1 style="font-size:18px; font-weight:700; color:var(--text); margin:0;">月次レポート</h1>
+    </div>
+
+    <!-- 月選択 -->
+    <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:20px; background:#fff; border-radius:12px; padding:12px; border:0.5px solid var(--border);">
+      <a th:href="@{/report(month=${prevMonth})}" style="color:var(--primary); text-decoration:none; font-size:20px; font-weight:700;">‹</a>
+      <span style="font-size:16px; font-weight:700; color:var(--text);" th:text="${ym.year + '年' + ym.monthValue + '月'}"></span>
+      <a th:href="@{/report(month=${nextMonth})}" style="color:var(--primary); text-decoration:none; font-size:20px; font-weight:700;">›</a>
+    </div>
+
+    <!-- サマリーカード -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+      <div style="background:#fff; border-radius:12px; padding:16px; border:0.5px solid #e2e8f0;">
+        <div style="font-size:11px; color:#94a3b8; font-weight:500; margin-bottom:6px;">今月の消費数</div>
+        <div style="font-size:28px; font-weight:800; color:#0ea5e9; line-height:1;" th:text="${totalConsumed}">0</div>
+        <div style="font-size:11px; color:#94a3b8; margin-top:4px;">使い切った個数</div>
+      </div>
+      <div style="background:#fff; border-radius:12px; padding:16px; border:0.5px solid #fca5a5;">
+        <div style="font-size:11px; color:#94a3b8; font-weight:500; margin-bottom:6px;">現在の期限切れ</div>
+        <div style="font-size:28px; font-weight:800; color:#ef4444; line-height:1;" th:text="${expiredCount}">0</div>
+        <div style="font-size:11px; color:#94a3b8; margin-top:4px;">要処分アイテム</div>
+      </div>
+    </div>
+
+    <!-- カテゴリ別消費グラフ -->
+    <div th:if="${!categoryCount.isEmpty()}" style="background:#fff; border-radius:12px; border:0.5px solid var(--border); padding:16px; margin-bottom:16px;">
+      <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:12px;">カテゴリ別消費数</div>
+      <canvas id="categoryChart" height="200"></canvas>
+    </div>
+
+    <!-- 消費ログ -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">今月の消費ログ</h2>
+        <span style="font-size:12px; color:var(--text-muted);" th:text="${monthLogs.size()} + '件'"></span>
+      </div>
+      <div class="item-list">
+        <div th:if="${#lists.isEmpty(monthLogs)}" class="empty-state">
+          <i class="ti ti-history" style="font-size:40px; color:var(--text-muted);"></i>
+          <p style="margin-top:12px;">今月の消費記録はありません</p>
+        </div>
+        <div th:each="log : ${monthLogs}"
+             style="display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border);">
+          <div style="width:36px; height:36px; background:#dcfce7; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <i class="ti ti-check" style="font-size:18px; color:#16a34a;"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-weight:600; font-size:14px;" th:text="${log.itemName}"></div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;"
+                 th:text="${#temporals.format(log.consumedAt, 'yyyy/MM/dd HH:mm')}"></div>
+          </div>
+          <span style="background:#dcfce7; color:#16a34a; font-size:12px; font-weight:600; padding:3px 8px; border-radius:20px;"
+                th:text="${log.quantity} + '個'"></span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <a href="/daily" class="bottom-nav-item">
+    <i class="ti ti-package nav-icon" aria-hidden="true"></i>
+    <span>日用品</span>
+  </a>
+  <a href="/food" class="bottom-nav-item">
+    <i class="ti ti-salad nav-icon" aria-hidden="true"></i>
+    <span>食品</span>
+  </a>
+  <a href="/dashboard" class="bottom-nav-center">
+    <div class="nav-home-btn"><i class="ti ti-home" aria-hidden="true"></i></div>
+    <span>ホーム</span>
+  </a>
+  <a href="/photos" class="bottom-nav-item">
+    <i class="ti ti-photo nav-icon" aria-hidden="true"></i>
+    <span>写真一覧</span>
+  </a>
+  <a href="/items/new" class="bottom-nav-item">
+    <i class="ti ti-plus nav-icon" aria-hidden="true"></i>
+    <span>追加</span>
+  </a>
+</nav>
+
+<script th:inline="javascript">
+var categoryData = /*[[${categoryCount}]]*/ {};
+if (Object.keys(categoryData).length > 0) {
+  var labels = Object.keys(categoryData).map(function(k) {
+    return k === 'food' ? '食品' : k === 'seasoning' ? '調味料' : k === 'daily' ? '日用品' : k === 'drink' ? '飲料' : 'その他';
+  });
+  var data = Object.values(categoryData);
+  new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#0ea5e9','#fbbf24','#22c55e','#8b5cf6','#94a3b8'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+}
+</script>
+</body>
+</html>

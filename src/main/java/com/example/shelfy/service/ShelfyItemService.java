@@ -69,11 +69,12 @@ public class ShelfyItemService {
     }
 
     @Transactional
-    public ShelfyItem updateStock(Long id, Long groupId, int delta, Long userId) {
+    public ShelfyItem updateStock(Long id, Long groupId, int delta, Long userId, String username) {
         ShelfyItem item = getById(id, groupId);
         int newStock = Math.max(0, item.getStock() + delta);
         item.setStock(newStock);
         item.setUpdatedBy(userId);
+        item.setUpdatedByName(username);
         return save(item);
     }
 

@@ -182,6 +182,17 @@ public class ShelfyItem {
     public void setMinStock(int minStock) { this.minStock = minStock; }
     public String getMemo() { return memo; }
     public void setMemo(String memo) { this.memo = memo; }
+    @Column(name = "opened_date")
+    private LocalDate openedDate;
+
+    @Column(name = "storage_location", length = 100)
+    private String storageLocation;
+
+    public LocalDate getOpenedDate() { return openedDate; }
+    public void setOpenedDate(LocalDate openedDate) { this.openedDate = openedDate; }
+    public String getStorageLocation() { return storageLocation; }
+    public void setStorageLocation(String storageLocation) { this.storageLocation = storageLocation; }
+
     public LocalDate getPurchaseDate() { return purchaseDate; }
     public void setPurchaseDate(LocalDate purchaseDate) { this.purchaseDate = purchaseDate; }
     public String getExpiryType() { return expiryType; }
@@ -196,6 +207,12 @@ public class ShelfyItem {
     public void setLinkedAt(LocalDateTime linkedAt) { this.linkedAt = linkedAt; }
     public Long getCreatedBy() { return createdBy; }
     public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
+    @Column(name = "updated_by_name", length = 100)
+    private String updatedByName;
+
+    public String getUpdatedByName() { return updatedByName; }
+    public void setUpdatedByName(String updatedByName) { this.updatedByName = updatedByName; }
+
     public Long getUpdatedBy() { return updatedBy; }
     public void setUpdatedBy(Long updatedBy) { this.updatedBy = updatedBy; }
     public LocalDateTime getCreatedAt() { return createdAt; }
