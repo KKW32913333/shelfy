@@ -106,8 +106,8 @@ public class LinkleShoppingService {
             log.info("Linkle買い物リストに追加: {} (groupId={})", item.getName(), item.getGroupId());
 
         } catch (Exception e) {
-            log.error("Linkle連携失敗: {} - {}", item.getName(), e.getMessage());
-            // 連携失敗しても在庫管理の動作は継続
+            log.error("Linkle連携失敗: {} - {} - {}", item.getName(), e.getMessage(), e.getClass().getName());
+            if (e.getCause() != null) log.error("Cause: {}", e.getCause().getMessage());
         }
     }
 
@@ -149,7 +149,8 @@ public class LinkleShoppingService {
                 log.info("Linkle購入済みに更新: {}", item.getName());
             }
         } catch (Exception e) {
-            log.error("Linkle購入済み更新失敗: {}", e.getMessage());
+            log.error("Linkle購入済み更新失敗詳細: {} - {}", e.getMessage(), e.getClass().getName());
+            if (e.getCause() != null) log.error("Cause: {}", e.getCause().getMessage());
         }
     }
 }
