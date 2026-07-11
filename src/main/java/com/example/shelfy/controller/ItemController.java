@@ -132,6 +132,9 @@ public class ItemController {
         if (isNew) item.setCreatedBy(userId);
         item.setUpdatedBy(userId);
 
+        if (item.getImageUrl() != null && item.getImageUrl().isBlank()) {
+            item.setImageUrl(null);
+        }
         ShelfyItem saved = itemService.save(item);
 
         if (isNew) {
