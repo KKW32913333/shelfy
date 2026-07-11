@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全アイテム一覧 - Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <script>
+  function shelfyOpenMenu() {
+    document.getElementById('side-overlay').style.display = 'block';
+    document.getElementById('side-panel').style.transform = 'translateX(0)';
+  }
+  function shelfyCloseMenu() {
+    document.getElementById('side-overlay').style.display = 'none';
+    document.getElementById('side-panel').style.transform = 'translateX(-100%)';
+  }
+  </script>
+  <style>
+    .category-chip {
+      display: inline-flex; align-items: center;
+      font-size: 10px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px;
+    }
+    .chip-daily    { background:#e0f2fe; color:#0369a1; }
+    .chip-food     { background:#dcfce7; color:#166534; }
+    .chip-seasoning{ background:#fef9c3; color:#b45309; }
+    .chip-drink    { background:#ede9fe; color:#6d28d9; }
+    .chip-other    { background:#f1f5f9; color:#64748b; }
+  </style>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header('items')}"></div>
+<div class="layout">
+  <div th:replace="~{fragments/sidebar :: sidebar('items')}"></div>
+  <main class="main-content" style="padding-bottom:100px;">
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <div>
+        <h1 style="font-size:18px; font-weight:700; color:var(--text); margin:0;">全アイテム一覧</h1>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:2px;" th:text="'合計 ' + ${total} + ' 件'"></p>
+      </div>
+      <a th:href="@{/items/new}" style="background:#0ea5e9; color:#fff; padding:7px 16px; border-radius:20px; font-size:12px; font-weight:700; text-decoration:none; display:flex; align-items:center; gap:4px;">
+        <i class="ti ti-plus" style="font-size:14px;"></i>追加
+      </a>
+    </div>
+
+    <!-- 検索 -->
+    <form th:action="@{/items}" method="get" style="margin-bottom:16px; display:flex; gap:8px;">
+      <input type="text" name="q" class="form-control" th:value="${keyword}" placeholder="商品名で検索..." style="flex:1;">
+      <button type="submit" class="btn btn-primary btn-sm">検索</button>
+      <a th:if="${keyword}" th:href="@{/items}" class="btn btn-secondary btn-sm">クリア</a>
+    </form>
+
+    <!-- カテゴリタブ -->
+    <div style="display:flex; gap:6px; margin-bottom:14px; overflow-x:auto; padding-bottom:4px;">
+      <a href="/items" style="flex-shrink:0; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; background:#0ea5e9; color:#fff; text-decoration:none;">すべて</a>
+      <a href="/daily" style="flex-shrink:0; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; background:#e0f2fe; color:#0369a1; text-decoration:none;">日用品</a>
+      <a href="/food" style="flex-shrink:0; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; background:#dcfce7; color:#166534; text-decoration:none;">食品</a>
+      <a href="/food?categoryFilter=seasoning" style="flex-shrink:0; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; background:#fef9c3; color:#b45309; text-decoration:none;">調味料</a>
+      <a href="/food?categoryFilter=drink" style="flex-shrink:0; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; background:#ede9fe; color:#6d28d9; text-decoration:none;">飲料</a>
+    </div>
+
+    <div class="card">
+      <div class="item-list">
+        <div th:if="${#lists.isEmpty(items)}" class="empty-state">
+          <i class="ti ti-package" style="font-size:40px; color:var(--text-muted);"></i>
+          <p style="margin-top:12px;">アイテムがありません</p>
+        </div>
+
+        <a th:each="item : ${items}"
+           th:href="@{/items/{id}(id=${item.id})}"
+           style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border);">
+          <div style="flex-shrink:0;">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}"
+                 style="width:44px; height:44px; object-fit:cover; border-radius:8px;">
+            <div th:unless="${item.imageUrl}"
+                 style="width:44px; height:44px; background:var(--bg); border-radius:8px; display:flex; align-items:center; justify-content:center;">
+              <i class="ti ti-package" style="font-size:22px; color:var(--text-muted);"></i>
+            </div>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:600; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" th:text="${item.name}"></div>
+            <div style="display:flex; align-items:center; gap:6px; margin-top:3px;">
+              <span th:class="'category-chip chip-' + ${item.category}"
+                    th:text="${item.category == 'daily' ? '日用品' : item.category == 'food' ? '食品' : item.category == 'seasoning' ? '調味料' : item.category == 'drink' ? '飲料' : 'その他'}"></span>
+              <span th:if="${item.expiryDate}"
+                    th:class="'category-chip badge--' + ${item.expiryStatus}"
+                    th:text="${item.daysUntilExpiry < 0} ? '期限切れ' : ('あと' + ${item.daysUntilExpiry} + '日')"></span>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0;">
+            <span th:class="'badge badge--' + ${item.stockStatus}"
+                  th:text="${item.stock} + '個'"></span>
+            <i class="ti ti-chevron-right" style="font-size:16px; color:var(--text-muted);"></i>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <a href="/daily" class="bottom-nav-item">
+    <i class="ti ti-package nav-icon" aria-hidden="true"></i>
+    <span>日用品</span>
+  </a>
+  <a href="/food" class="bottom-nav-item">
+    <i class="ti ti-salad nav-icon" aria-hidden="true"></i>
+    <span>食品</span>
+  </a>
+  <a href="/dashboard" class="bottom-nav-center">
+    <div class="nav-home-btn"><i class="ti ti-home" aria-hidden="true"></i></div>
+    <span>ホーム</span>
+  </a>
+  <a href="/photos" class="bottom-nav-item">
+    <i class="ti ti-photo nav-icon" aria-hidden="true"></i>
+    <span>写真一覧</span>
+  </a>
+  <a href="/items/new" class="bottom-nav-item">
+    <i class="ti ti-plus nav-icon" aria-hidden="true"></i>
+    <span>追加</span>
+  </a>
+</nav>
+
+<div id="side-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200;" onclick="shelfyCloseMenu()"></div>
+<div id="side-panel" style="position:fixed; top:0; left:0; bottom:0; width:280px; background:#fff; z-index:201; transform:translateX(-100%); transition:transform .25s ease; display:flex; flex-direction:column; box-shadow:4px 0 20px rgba(0,0,0,.12);">
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 20px 16px; border-bottom:1px solid #f1f5f9; margin-top:60px;">
+    <span style="font-size:17px; font-weight:700; color:#1e293b;">Shelfy</span>
+    <button onclick="shelfyCloseMenu()" style="background:none;border:none;cursor:pointer;padding:4px;"><i class="ti ti-x" style="font-size:22px; color:#94a3b8;"></i></button>
+  </div>
+  <nav style="padding:12px 0; flex:1; overflow-y:auto;">
+    <a href="/score" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-medal" style="font-size:20px;color:#f59e0b;"></i>スコア・バッジ</a>
+    <a href="/groups" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-users" style="font-size:20px;color:#94a3b8;"></i>グループ選択</a>
+    <a href="/shopping" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-shopping-cart" style="font-size:20px;color:#94a3b8;"></i>買い物リスト</a>
+    <a href="/consumption" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-history" style="font-size:20px;color:#94a3b8;"></i>消費ログ</a>
+    <a href="/report" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-chart-pie" style="font-size:20px;color:#94a3b8;"></i>月次レポート</a>
+    <a href="/dashboard" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-home" style="font-size:20px;color:#94a3b8;"></i>ホーム</a>
+    <a href="/daily" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-package" style="font-size:20px;color:#94a3b8;"></i>日用品管理</a>
+    <a href="/food" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-salad" style="font-size:20px;color:#94a3b8;"></i>食品・調味料管理</a>
+    <a href="/alerts" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#1e293b;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-bell" style="font-size:20px;color:#94a3b8;"></i>アラート</a>
+    <div style="height:1px;background:#f1f5f9;margin:8px 0;"></div>
+    <a href="/logout" style="display:flex;align-items:center;gap:14px;padding:14px 24px;color:#ef4444;text-decoration:none;font-size:15px;font-weight:500;"><i class="ti ti-logout" style="font-size:20px;color:#ef4444;"></i>ログアウト</a>
+  </nav>
+</div>
+</body>
+</html>
