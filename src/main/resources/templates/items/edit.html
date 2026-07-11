@@ -63,10 +63,10 @@
             <input type="hidden" name="stock" id="stockInput" th:value="${item.stock}">
             <div style="display:flex; align-items:center; gap:10px; padding:8px 0;">
               <button type="button" onclick="changeVal('stockInput','stockDisplay',-1,0)"
-                style="width:40px;height:40px;border-radius:10px;border:0.5px solid #e2e8f0;background:#f8fafc;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;color:#374151;">－</button>
-              <span id="stockDisplay" style="font-size:24px;font-weight:800;color:#0ea5e9;min-width:48px;text-align:center;" th:text="${item.stock}">0</span>
+                style="width:32px;height:32px;border-radius:8px;border:0.5px solid #e2e8f0;background:#f8fafc;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;color:#374151;">－</button>
+              <span id="stockDisplay" style="font-size:18px;font-weight:800;color:#0ea5e9;min-width:36px;text-align:center;" th:text="${item.stock}">0</span>
               <button type="button" onclick="changeVal('stockInput','stockDisplay',1,0)"
-                style="width:40px;height:40px;border-radius:10px;border:none;background:#0ea5e9;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;">＋</button>
+                style="width:32px;height:32px;border-radius:8px;border:none;background:#0ea5e9;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;">＋</button>
             </div>
           </div>
           <div class="form-group">
@@ -74,10 +74,10 @@
             <input type="hidden" name="minStock" id="minStockInput" th:value="${item.minStock}">
             <div style="display:flex; align-items:center; gap:10px; padding:8px 0;">
               <button type="button" onclick="changeVal('minStockInput','minStockDisplay',-1,1)"
-                style="width:40px;height:40px;border-radius:10px;border:0.5px solid #e2e8f0;background:#f8fafc;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;color:#374151;">－</button>
-              <span id="minStockDisplay" style="font-size:24px;font-weight:800;color:#0ea5e9;min-width:48px;text-align:center;" th:text="${item.minStock}">1</span>
+                style="width:32px;height:32px;border-radius:8px;border:0.5px solid #e2e8f0;background:#f8fafc;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;color:#374151;">－</button>
+              <span id="minStockDisplay" style="font-size:18px;font-weight:800;color:#0ea5e9;min-width:36px;text-align:center;" th:text="${item.minStock}">1</span>
               <button type="button" onclick="changeVal('minStockInput','minStockDisplay',1,1)"
-                style="width:40px;height:40px;border-radius:10px;border:none;background:#0ea5e9;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;">＋</button>
+                style="width:32px;height:32px;border-radius:8px;border:none;background:#0ea5e9;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;">＋</button>
             </div>
           </div>
         </div>
