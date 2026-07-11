@@ -26,6 +26,8 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8081
 
 ENTRYPOINT ["java", \
+  "-Xmx384m", \
+  "-Xms128m", \
   "-Djava.security.egd=file:/dev/./urandom", \
   "-Duser.timezone=Asia/Tokyo", \
   "-jar", "app.jar"]

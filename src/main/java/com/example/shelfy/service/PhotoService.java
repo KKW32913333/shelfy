@@ -35,9 +35,9 @@ public class PhotoService {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Thumbnails.of(file.getInputStream())
-                .size(800, 800)
+                .size(400, 400)
                 .outputFormat("jpg")
-                .outputQuality(0.85)
+                .outputQuality(0.75)
                 .toOutputStream(baos);
 
             String key = "items/" + itemId + "/" + UUID.randomUUID() + ".jpg";
