@@ -442,3 +442,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .app-header--dark .header-logo {
   display: flex; align-items: baseline; gap: 3px;
 }
+
+#push-banner { display: none !important; }
+#push-banner.show { display: flex !important; }
