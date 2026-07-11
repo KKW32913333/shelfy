@@ -102,7 +102,7 @@
           <i class="ti ti-camera" style="font-size:24px;"></i>
           <span th:text="${item.name}" style="text-align:center;padding:0 4px; font-size:11px;"></span>
         </div>
-        <div th:if="${item.imageUrl}" class="photo-label" th:text="${item.name}"></div>
+        <div th:if="${item.imageUrl != null and !item.imageUrl.isEmpty()}" class="photo-label" th:text="${item.name}"></div>
       </a>
     </div>
 
