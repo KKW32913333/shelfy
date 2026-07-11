@@ -30,13 +30,13 @@
           <p>日用品がまだ登録されていません</p>
           <a th:href="@{/items/new(category=daily)}" class="btn btn-primary" style="margin-top:12px">最初のアイテムを追加</a>
         </div>
-        <div th:each="item : ${items}" class="item-row">
+        <a th:each="item : ${items}" th:href="@{/items/{id}(id=${item.id})}" class="item-row" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px;">
           <div class="item-thumb">
             <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
             <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">🧴</span>
           </div>
           <div class="item-info">
-            <a th:href="@{/items/{id}(id=${item.id})}" class="item-name" th:text="${item.name}" style="text-decoration:none;color:inherit;">商品名</a>
+            <span class="item-name" th:text="${item.name}">商品名</span>
             <div class="item-meta" th:text="'補充目安：' + ${item.minStock} + '個'"></div>
           </div>
           <div class="item-badge">
@@ -61,7 +61,7 @@
               <input type="hidden" name="returnTo" value="/daily">
               <button type="submit" class="btn-icon" style="color:var(--danger)">🗑</button>
             </form>
-          </div>
+          </a>
         </div>
       </div>
     </div>
