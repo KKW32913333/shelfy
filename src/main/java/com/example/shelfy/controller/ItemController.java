@@ -52,12 +52,20 @@ public class ItemController {
                            Model model) {
         Long groupId = currentUserService.getCurrentGroupId();
 
-        var items = (q != null && !q.isBlank())
+        var rawItems = (q != null && !q.isBlank())
                 ? itemService.search(groupId, q)
                 : (categoryFilter != null && !categoryFilter.isBlank())
                     ? itemService.getByCategory(groupId, categoryFilter)
                     : itemService.getAll(groupId).stream()
                         .filter(ShelfyItem::isFood).toList();
+
+        var items = rawItems.stream()
+                .sorted((a, b) -> {
+                    if (a.getExpiryDate() == null && b.getExpiryDate() == null) return 0;
+                    if (a.getExpiryDate() == null) return 1;
+                    if (b.getExpiryDate() == null) return -1;
+                    return a.getExpiryDate().compareTo(b.getExpiryDate());
+                }).toList();
 
         model.addAttribute("items", items);
         model.addAttribute("keyword", q);
