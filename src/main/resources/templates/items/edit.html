@@ -59,11 +59,23 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">在庫数</label>
-            <input type="number" name="stock" class="form-control" th:value="${item.stock}" min="0">
+            <input type="hidden" name="stock" id="stockInput" th:value="${item.stock}">
+            <div class="drum-picker" id="stockPicker" data-target="stockInput" th:data-value="${item.stock}">
+              <div class="drum-picker-inner">
+                <div class="drum-picker-highlight"></div>
+                <div class="drum-picker-list"></div>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">補充目安</label>
-            <input type="number" name="minStock" class="form-control" th:value="${item.minStock}" min="1">
+            <input type="hidden" name="minStock" id="minStockInput" th:value="${item.minStock}">
+            <div class="drum-picker" id="minStockPicker" data-target="minStockInput" th:data-value="${item.minStock}">
+              <div class="drum-picker-inner">
+                <div class="drum-picker-highlight"></div>
+                <div class="drum-picker-list"></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-row">
