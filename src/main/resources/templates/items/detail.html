@@ -137,7 +137,7 @@
       <form th:action="@{/items/{id}/consume(id=${item.id})}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         <input type="hidden" name="quantity" value="1">
-        <input type="hidden" name="returnTo" th:value="${item.daily ? '/daily' : '/food'}">
+        <input type="hidden" name="returnTo" th:value="${item.category == 'daily' ? '/daily' : '/food'}">
         <button type="submit" style="background:#dcfce7; color:#16a34a; border:none; border-radius:10px; padding:10px 20px; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
           <i class="ti ti-check" style="font-size:16px;"></i>使い切った
         </button>
@@ -148,7 +148,7 @@
       <form th:action="@{/items/{id}/delete(id=${item.id})}" method="post"
             onsubmit="return confirm('削除しますか？')">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <input type="hidden" name="returnTo" th:value="${item.daily ? '/daily' : '/food'}">
+        <input type="hidden" name="returnTo" th:value="${item.category == 'daily' ? '/daily' : '/food'}">
         <button type="submit" class="btn btn-danger btn-sm">
           <i class="ti ti-trash"></i> このアイテムを削除
         </button>

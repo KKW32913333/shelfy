@@ -168,11 +168,14 @@ public class ItemController {
 
     @PostMapping("/items/{id}/delete")
     public String delete(@PathVariable Long id,
-                         @RequestParam(defaultValue = "/daily") String returnTo,
+                         @RequestParam(required = false) String returnTo,
                          RedirectAttributes ra) {
         Long groupId = currentUserService.getCurrentGroupId();
+        ShelfyItem item = itemService.getById(id, groupId);
+        String category = item.getCategory();
         itemService.delete(id, groupId);
         ra.addFlashAttribute("success", "削除しました");
-        return "redirect:" + returnTo;
+        if (returnTo != null && !returnTo.isBlank()) return "redirect:" + returnTo;
+        return "redirect:/" + ("daily".equals(category) ? "daily" : "food");
     }
 }
