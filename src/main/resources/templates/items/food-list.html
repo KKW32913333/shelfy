@@ -36,7 +36,7 @@
             <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">🥛</span>
           </div>
           <div class="item-info">
-            <div class="item-name" th:text="${item.name}">商品名</div>
+            <a th:href="@{/items/{id}(id=${item.id})}" class="item-name" th:text="${item.name}" style="text-decoration:none;color:inherit;">商品名</a>
             <div class="item-meta" th:text="'補充目安：' + ${item.minStock} + '個'"></div>
           </div>
           <div class="item-badge">
