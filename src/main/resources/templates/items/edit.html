@@ -126,5 +126,301 @@ document.querySelectorAll('.category-tab input[type=radio]').forEach(function(ra
     <span>追加</span>
   </a>
 </nav>
+<style>
+.drum-picker {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  position: relative;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+  user-select: none;
+}
+.drum-picker-inner {
+  height: 100%;
+  position: relative;
+}
+.drum-picker-highlight {
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 44px;
+  transform: translateY(-50%);
+  background: rgba(14,165,233,.08);
+  border-top: 1.5px solid #0ea5e9;
+  border-bottom: 1.5px solid #0ea5e9;
+  pointer-events: none;
+  z-index: 2;
+}
+.drum-picker-list {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 1;
+}
+.drum-picker-item {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color .1s, font-size .1s;
+}
+.drum-picker-item.selected {
+  color: #0ea5e9;
+  font-size: 24px;
+  font-weight: 800;
+}
+.drum-picker::before,
+.drum-picker::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 58px;
+  z-index: 3;
+  pointer-events: none;
+}
+.drum-picker::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--surface) 0%, transparent 100%);
+}
+.drum-picker::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--surface) 0%, transparent 100%);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var MAX = 30;
+
+  document.querySelectorAll('.drum-picker').forEach(function(picker) {
+    var targetId = picker.getAttribute('data-target');
+    var input = document.getElementById(targetId);
+    var initVal = parseInt(picker.getAttribute('data-value')) || 0;
+    var list = picker.querySelector('.drum-picker-list');
+    var itemHeight = 44;
+    var currentIndex = initVal;
+
+    // リスト生成（0〜30）
+    for (var i = 0; i <= MAX; i++) {
+      var div = document.createElement('div');
+      div.className = 'drum-picker-item' + (i === initVal ? ' selected' : '');
+      div.textContent = i;
+      list.appendChild(div);
+    }
+
+    // 初期位置
+    var offsetTop = 58; // picker height/2 - itemHeight/2 = 80-22=58
+    list.style.top = (offsetTop - initVal * itemHeight) + 'px';
+
+    function updateSelected(idx) {
+      idx = Math.max(0, Math.min(MAX, idx));
+      currentIndex = idx;
+      input.value = idx;
+      var items = list.querySelectorAll('.drum-picker-item');
+      items.forEach(function(item, i) {
+        item.classList.toggle('selected', i === idx);
+      });
+      list.style.top = (offsetTop - idx * itemHeight) + 'px';
+    }
+
+    // タッチ操作
+    var startY, startTop;
+    picker.addEventListener('touchstart', function(e) {
+      startY = e.touches[0].clientY;
+      startTop = parseInt(list.style.top) || offsetTop;
+      list.style.transition = 'none';
+    }, {passive: true});
+
+    picker.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      var dy = e.touches[0].clientY - startY;
+      var newTop = startTop + dy;
+      list.style.top = newTop + 'px';
+    }, {passive: false});
+
+    picker.addEventListener('touchend', function(e) {
+      list.style.transition = 'top .2s ease';
+      var currentTop = parseInt(list.style.top) || offsetTop;
+      var idx = Math.round((offsetTop - currentTop) / itemHeight);
+      updateSelected(idx);
+    });
+
+    // マウス操作（PC用）
+    var isDragging = false;
+    picker.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      startY = e.clientY;
+      startTop = parseInt(list.style.top) || offsetTop;
+      list.style.transition = 'none';
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      var dy = e.clientY - startY;
+      list.style.top = (startTop + dy) + 'px';
+    });
+    document.addEventListener('mouseup', function() {
+      if (!isDragging) return;
+      isDragging = false;
+      list.style.transition = 'top .2s ease';
+      var currentTop = parseInt(list.style.top) || offsetTop;
+      var idx = Math.round((offsetTop - currentTop) / itemHeight);
+      updateSelected(idx);
+    });
+  });
+});
+</script>
+<style>
+.drum-picker {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  position: relative;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+  user-select: none;
+}
+.drum-picker-inner {
+  height: 100%;
+  position: relative;
+}
+.drum-picker-highlight {
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 44px;
+  transform: translateY(-50%);
+  background: rgba(14,165,233,.08);
+  border-top: 1.5px solid #0ea5e9;
+  border-bottom: 1.5px solid #0ea5e9;
+  pointer-events: none;
+  z-index: 2;
+}
+.drum-picker-list {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 1;
+}
+.drum-picker-item {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color .1s, font-size .1s;
+}
+.drum-picker-item.selected {
+  color: #0ea5e9;
+  font-size: 24px;
+  font-weight: 800;
+}
+.drum-picker::before,
+.drum-picker::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 58px;
+  z-index: 3;
+  pointer-events: none;
+}
+.drum-picker::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--surface) 0%, transparent 100%);
+}
+.drum-picker::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--surface) 0%, transparent 100%);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var MAX = 30;
+
+  document.querySelectorAll('.drum-picker').forEach(function(picker) {
+    var targetId = picker.getAttribute('data-target');
+    var input = document.getElementById(targetId);
+    var initVal = parseInt(picker.getAttribute('data-value')) || 0;
+    var list = picker.querySelector('.drum-picker-list');
+    var itemHeight = 44;
+    var currentIndex = initVal;
+
+    // リスト生成（0〜30）
+    for (var i = 0; i <= MAX; i++) {
+      var div = document.createElement('div');
+      div.className = 'drum-picker-item' + (i === initVal ? ' selected' : '');
+      div.textContent = i;
+      list.appendChild(div);
+    }
+
+    // 初期位置
+    var offsetTop = 58; // picker height/2 - itemHeight/2 = 80-22=58
+    list.style.top = (offsetTop - initVal * itemHeight) + 'px';
+
+    function updateSelected(idx) {
+      idx = Math.max(0, Math.min(MAX, idx));
+      currentIndex = idx;
+      input.value = idx;
+      var items = list.querySelectorAll('.drum-picker-item');
+      items.forEach(function(item, i) {
+        item.classList.toggle('selected', i === idx);
+      });
+      list.style.top = (offsetTop - idx * itemHeight) + 'px';
+    }
+
+    // タッチ操作
+    var startY, startTop;
+    picker.addEventListener('touchstart', function(e) {
+      startY = e.touches[0].clientY;
+      startTop = parseInt(list.style.top) || offsetTop;
+      list.style.transition = 'none';
+    }, {passive: true});
+
+    picker.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      var dy = e.touches[0].clientY - startY;
+      var newTop = startTop + dy;
+      list.style.top = newTop + 'px';
+    }, {passive: false});
+
+    picker.addEventListener('touchend', function(e) {
+      list.style.transition = 'top .2s ease';
+      var currentTop = parseInt(list.style.top) || offsetTop;
+      var idx = Math.round((offsetTop - currentTop) / itemHeight);
+      updateSelected(idx);
+    });
+
+    // マウス操作（PC用）
+    var isDragging = false;
+    picker.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      startY = e.clientY;
+      startTop = parseInt(list.style.top) || offsetTop;
+      list.style.transition = 'none';
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      var dy = e.clientY - startY;
+      list.style.top = (startTop + dy) + 'px';
+    });
+    document.addEventListener('mouseup', function() {
+      if (!isDragging) return;
+      isDragging = false;
+      list.style.transition = 'top .2s ease';
+      var currentTop = parseInt(list.style.top) || offsetTop;
+      var idx = Math.round((offsetTop - currentTop) / itemHeight);
+      updateSelected(idx);
+    });
+  });
+});
+</script>
 </body>
 </html>
