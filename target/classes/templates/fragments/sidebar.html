@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav th:fragment="sidebar(activePage)" class="sidebar">
+  <ul class="sidebar-nav">
+    <li>
+      <a th:href="@{/dashboard}"
+         th:classappend="${activePage == 'dashboard'} ? ' active' : ''"
+         class="sidebar-link">
+        <span class="sidebar-icon">🏠</span>
+        <span>ダッシュボード</span>
+      </a>
+    </li>
+    <li>
+      <a th:href="@{/daily}"
+         th:classappend="${activePage == 'daily'} ? ' active' : ''"
+         class="sidebar-link">
+        <span class="sidebar-icon">🧴</span>
+        <span>日用品管理</span>
+      </a>
+    </li>
+    <li>
+      <a th:href="@{/food}"
+         th:classappend="${activePage == 'food'} ? ' active' : ''"
+         class="sidebar-link">
+        <span class="sidebar-icon">🥛</span>
+        <span>食品・調味料</span>
+      </a>
+    </li>
+    <li>
+      <a th:href="@{/photos}"
+         th:classappend="${activePage == 'photos'} ? ' active' : ''"
+         class="sidebar-link">
+        <span class="sidebar-icon">📷</span>
+        <span>写真一覧</span>
+      </a>
+    </li>
+    <li>
+      <a th:href="@{/alerts}"
+         th:classappend="${activePage == 'alerts'} ? ' active' : ''"
+         class="sidebar-link">
+        <span class="sidebar-icon">🔔</span>
+        <span>アラート</span>
+      </a>
+    </li>
+    <li sec:authorize="hasRole('ADMIN')">
+      <a th:href="@{/admin/users}"
+         th:classappend="${activePage == 'admin'} ? ' active' : ''"
+         class="sidebar-link">
+        <span class="sidebar-icon">⚙️</span>
+        <span>管理</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</body>
+</html>

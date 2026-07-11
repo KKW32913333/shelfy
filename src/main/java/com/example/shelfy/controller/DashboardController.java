@@ -35,7 +35,7 @@ public class DashboardController {
         } catch (IllegalStateException e) {
             groupId = getFirstGroupId(userId);
             if (groupId == null) {
-                model.addAttribute("error", "グループに参加していません。Linkleでグループに参加してください。");
+                model.addAttribute("error", "グループに参加していません。");
                 return "dashboard-no-group";
             }
             currentUserService.setCurrentGroupId(groupId);
@@ -61,7 +61,7 @@ public class DashboardController {
                 return ((Number) userRows.get(0).get("active_group_id")).longValue();
             }
         } catch (Exception e) {
-            // テーブル構造が違う場合はnullを返す
+            // 取得失敗時はnullを返す
         }
         return null;
     }

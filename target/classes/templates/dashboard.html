@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ダッシュボード — Shelfy</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <meta name="theme-color" content="#0ea5e9">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div th:replace="~{fragments/header :: header('dashboard')}"></div>
+
+<div class="layout">
+  <!-- サイドバー -->
+  <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
+
+  <!-- メインコンテンツ -->
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">ダッシュボード</h1>
+        <p class="page-subtitle">在庫の状況をひと目で確認できます</p>
+      </div>
+      <a th:href="@{/items/new}" class="btn btn-primary">＋ アイテムを追加</a>
+    </div>
+
+    <!-- サマリーカード -->
+    <div class="stats-grid">
+      <a th:href="@{/food}" class="stat-card stat-card--link">
+        <i class="ti ti-box stat-ti"></i>
+        <div class="stat-body">
+          <div class="stat-value" th:text="${stats.total}">0</div>
+          <div class="stat-label">総アイテム数</div>
+        </div>
+      </a>
+      <a th:href="@{/food}" class="stat-card stat-card--link">
+        <i class="ti ti-calendar stat-ti"></i>
+        <div class="stat-body">
+          <div class="stat-value" th:text="${stats.expiringWarning}">0</div>
+          <div class="stat-label">30日以内</div>
+        </div>
+      </a>
+      <a th:href="@{/food}" class="stat-card stat-card--link stat-card--warning">
+        <i class="ti ti-clock stat-ti" style="color:var(--warning);"></i>
+        <div class="stat-body">
+          <div class="stat-value" th:text="${stats.expiringSoon}">0</div>
+          <div class="stat-label">7日以内</div>
+        </div>
+      </a>
+      <a th:href="@{/alerts}" class="stat-card stat-card--link stat-card--danger">
+        <i class="ti ti-alert-circle stat-ti" style="color:var(--danger);"></i>
+        <div class="stat-body">
+          <div class="stat-value" th:text="${stats.expired}">0</div>
+          <div class="stat-label">期限切れ</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="dashboard-grid">
+
+      <!-- 期限の近いアイテム -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">期限の近い食品・調味料</h2>
+          <a th:href="@{/food}" class="link-muted">すべて見る ›</a>
+        </div>
+        <div class="item-list">
+          <div th:if="${#lists.isEmpty(expiringItems)}" class="empty-state">
+            <p>期限の近いアイテムはありません 🎉</p>
+          </div>
+          <div th:each="item : ${expiringItems}" class="item-row">
+            <div class="item-thumb">
+              <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" alt="">
+              <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">🛒</span>
+            </div>
+            <div class="item-info">
+              <div class="item-name" th:text="${item.name}">商品名</div>
+              <div class="item-meta" th:text="${item.expiryType == 'use_by' ? '消費期限' : '賞味期限'} + '：' + ${#temporals.format(item.expiryDate,'yyyy/MM/dd')}"></div>
+            </div>
+            <div class="item-badge">
+              <span th:class="'badge badge--' + ${item.expiryStatus}"
+                    th:text="${item.daysUntilExpiry < 0 ? '期限切れ' :
+                               item.daysUntilExpiry == 0 ? '今日' :
+                               'あと' + item.daysUntilExpiry + '日'}">
+              </span>
+            </div>
+            <div class="item-actions">
+              <a th:href="@{/items/{id}(id=${item.id})}" class="btn-icon">›</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 在庫不足アイテム + カテゴリ別 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">在庫が少ないアイテム</h2>
+          <a th:href="@{/daily}" class="link-muted">すべて見る ›</a>
+        </div>
+        <div class="item-list">
+          <div th:if="${#lists.isEmpty(lowStockItems)}" class="empty-state">
+            <p>在庫不足のアイテムはありません ✅</p>
+          </div>
+          <div th:each="item : ${lowStockItems}" class="item-row">
+            <div class="item-thumb">
+              <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" alt="">
+              <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">📦</span>
+            </div>
+            <div class="item-info">
+              <div class="item-name" th:text="${item.name}">商品名</div>
+              <div class="item-meta" th:text="'補充目安：' + ${item.minStock} + '個'"></div>
+            </div>
+            <div class="item-badge">
+              <span th:class="'badge badge--' + ${item.stockStatus}"
+                    th:text="${item.stock} + '個'">
+              </span>
+              <span th:if="${item.linkedToShopping}" class="badge badge--linkle" title="Linkle買い物リストに追加済み">🛒Linkle</span>
+            </div>
+            <div class="item-actions">
+              <form th:action="@{/items/{id}/stock(id=${item.id})}" method="post" style="display:inline">
+                <input type="hidden" name="delta" value="1">
+                <input type="hidden" name="returnTo" value="/dashboard">
+                <button type="submit" class="btn-icon btn-icon--green">＋</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最近追加したアイテム -->
+      <div class="card card--full">
+        <div class="card-header">
+          <h2 class="card-title">最近追加したアイテム（写真一覧）</h2>
+          <a th:href="@{/photos}" class="link-muted">すべて見る ›</a>
+        </div>
+        <div class="photo-grid">
+          <a th:each="item : ${recentItems}"
+             th:href="@{/items/{id}(id=${item.id})}"
+             class="photo-item">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
+            <div th:unless="${item.imageUrl}" class="photo-placeholder">📦</div>
+            <div class="photo-label">
+              <span th:text="${item.name}">商品名</span>
+              <span th:if="${item.expiryDate}"
+                    th:class="'badge badge--' + ${item.expiryStatus} + ' badge--sm'"
+                    th:text="${item.daysUntilExpiry < 0 ? '期限切れ' :
+                               item.daysUntilExpiry == 0 ? '今日' :
+                               'あと' + item.daysUntilExpiry + '日'}">
+              </span>
+            </div>
+          </a>
+          <!-- 追加ボタン -->
+          <a th:href="@{/items/new}" class="photo-item photo-item--add">
+            <span class="photo-add-icon">＋</span>
+            <span>追加する</span>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /.dashboard-grid -->
+  </main>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+<nav class="bottom-nav">
+  <a href="/daily" class="bottom-nav-item">
+    <i class="ti ti-package nav-icon" aria-hidden="true"></i>
+    <span>日用品</span>
+  </a>
+  <a href="/food" class="bottom-nav-item">
+    <i class="ti ti-salad nav-icon" aria-hidden="true"></i>
+    <span>食品</span>
+  </a>
+  <a href="/dashboard" class="bottom-nav-center active">
+    <div class="nav-home-btn"><i class="ti ti-home" aria-hidden="true"></i></div>
+    <span>ホーム</span>
+  </a>
+  <a href="/photos" class="bottom-nav-item">
+    <i class="ti ti-photo nav-icon" aria-hidden="true"></i>
+    <span>写真一覧</span>
+  </a>
+  <a href="/items/new" class="bottom-nav-item">
+    <i class="ti ti-plus nav-icon" aria-hidden="true"></i>
+    <span>追加</span>
+  </a>
+</nav>
+<script>
+const VAPID_PUBLIC_KEY = 'BAghuyEwJkujYobJFsmwmkH6js6wMo5sEKVCIJEGVC5iXchf-S8uk7Bqoj001TuqUAEdhNdjxByWrt3hQ7EeL7w';
+
+async function registerPush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  try {
+    const reg = await navigator.serviceWorker.register('/sw.js');
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+
+    await fetch('/api/push/subscribe', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(sub.toJSON())
+    });
+    console.log('プッシュ通知登録完了');
+  } catch(e) {
+    console.log('プッシュ通知登録失敗:', e);
+  }
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+}
+
+window.addEventListener('load', registerPush);
+</script>
+</body>
+</html>

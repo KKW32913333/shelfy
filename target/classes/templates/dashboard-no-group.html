@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shelfy</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <meta name="theme-color" content="#0ea5e9">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-logo">🗄️</div>
+    <div class="login-title">Shelfy</div>
+    <div class="flash flash--error" th:text="${error}"></div>
+    <p style="text-align:center;margin-top:16px">
+      <a th:href="@{/logout}" class="btn btn-secondary">ログアウト</a>
+    </p>
+  </div>
+</div>
+</body>
+</html>

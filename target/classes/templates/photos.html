@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>写真一覧 — Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <meta name="theme-color" content="#0ea5e9">
+  <style>
+    .photo-grid-page {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      margin-bottom: 80px;
+    }
+    .photo-grid-item {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: var(--bg);
+      text-decoration: none;
+    }
+    .photo-grid-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .2s;
+    }
+    .photo-grid-item:hover img { transform: scale(1.05); }
+    .photo-grid-item .photo-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,.6));
+      color: #fff; padding: 16px 6px 5px;
+      font-size: 10px; font-weight: 500;
+    }
+    .photo-grid-item .no-photo {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px; color: var(--text-muted); font-size: 10px;
+      background: var(--bg);
+    }
+    .filter-tabs {
+      display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .filter-tab {
+      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      border: 1px solid var(--border); color: var(--text-muted);
+      background: var(--surface); cursor: pointer; text-decoration: none;
+      transition: all .15s;
+    }
+    .filter-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  </style>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header('photos')}"></div>
+<div class="layout">
+  <div th:replace="~{fragments/sidebar :: sidebar('photos')}"></div>
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1 class="page-title">写真一覧</h1>
+      <a th:href="@{/items/new}" class="btn btn-primary">
+        <i class="ti ti-plus"></i> 追加
+      </a>
+    </div>
+
+    <div class="filter-tabs">
+      <a href="/photos" th:classappend="${category == null} ? ' active' : ''" class="filter-tab">すべて</a>
+      <a href="/photos?category=food" th:classappend="${category == 'food'} ? ' active' : ''" class="filter-tab">食品</a>
+      <a href="/photos?category=seasoning" th:classappend="${category == 'seasoning'} ? ' active' : ''" class="filter-tab">調味料</a>
+      <a href="/photos?category=daily" th:classappend="${category == 'daily'} ? ' active' : ''" class="filter-tab">日用品</a>
+      <a href="/photos?category=drink" th:classappend="${category == 'drink'} ? ' active' : ''" class="filter-tab">飲料</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(items)}" class="empty-state" style="padding:60px 20px;">
+      <i class="ti ti-photo" style="font-size:48px;color:var(--text-muted);"></i>
+      <p style="margin-top:12px;">まだ写真がありません</p>
+      <a th:href="@{/items/new}" class="btn btn-primary" style="margin-top:16px;">アイテムを追加</a>
+    </div>
+
+    <div class="photo-grid-page">
+      <a th:each="item : ${items}"
+         th:href="@{/items/{id}(id=${item.id})}"
+         class="photo-grid-item">
+        <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
+        <div th:unless="${item.imageUrl}" class="no-photo">
+          <i class="ti ti-camera" style="font-size:24px;"></i>
+          <span th:text="${item.name}" style="text-align:center;padding:0 4px;"></span>
+        </div>
+        <div class="photo-label" th:text="${item.name}"></div>
+      </a>
+    </div>
+
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <a href="/daily" class="bottom-nav-item">
+    <i class="ti ti-package nav-icon" aria-hidden="true"></i>
+    <span>日用品</span>
+  </a>
+  <a href="/food" class="bottom-nav-item">
+    <i class="ti ti-salad nav-icon" aria-hidden="true"></i>
+    <span>食品</span>
+  </a>
+  <a href="/dashboard" class="bottom-nav-center">
+    <div class="nav-home-btn"><i class="ti ti-home" aria-hidden="true"></i></div>
+    <span>ホーム</span>
+  </a>
+  <a href="/photos" class="bottom-nav-item active">
+    <i class="ti ti-photo nav-icon" aria-hidden="true"></i>
+    <span>写真一覧</span>
+  </a>
+  <a href="/items/new" class="bottom-nav-item">
+    <i class="ti ti-plus nav-icon" aria-hidden="true"></i>
+    <span>追加</span>
+  </a>
+</nav>
+</body>
+</html>

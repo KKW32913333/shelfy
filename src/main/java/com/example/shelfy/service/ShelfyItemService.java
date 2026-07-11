@@ -2,7 +2,6 @@ package com.example.shelfy.service;
 
 import com.example.shelfy.model.ShelfyItem;
 import com.example.shelfy.repository.ShelfyItemRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +11,16 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class ShelfyItemService {
 
     private final ShelfyItemRepository itemRepository;
     private final LinkleShoppingService linkleShoppingService;
+
+    public ShelfyItemService(ShelfyItemRepository itemRepository,
+                             LinkleShoppingService linkleShoppingService) {
+        this.itemRepository = itemRepository;
+        this.linkleShoppingService = linkleShoppingService;
+    }
 
     // =============================================
     // 取得

@@ -3,7 +3,6 @@ package com.example.shelfy.controller;
 import com.example.shelfy.model.ShelfyItem;
 import com.example.shelfy.repository.ShelfyItemRepository;
 import com.example.shelfy.service.CurrentUserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +12,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequiredArgsConstructor
 public class AlertController {
 
     private final ShelfyItemRepository itemRepository;
     private final CurrentUserService currentUserService;
+
+    public AlertController(ShelfyItemRepository itemRepository, CurrentUserService currentUserService) {
+        this.itemRepository = itemRepository;
+        this.currentUserService = currentUserService;
+    }
 
     @GetMapping("/alerts")
     public String alerts(Model model) {

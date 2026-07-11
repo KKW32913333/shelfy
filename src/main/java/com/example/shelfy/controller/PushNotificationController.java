@@ -3,18 +3,21 @@ package com.example.shelfy.controller;
 import com.example.shelfy.model.PushSubscription;
 import com.example.shelfy.repository.PushSubscriptionRepository;
 import com.example.shelfy.service.CurrentUserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-@RequiredArgsConstructor
 public class PushNotificationController {
 
     private final PushSubscriptionRepository subscriptionRepository;
     private final CurrentUserService currentUserService;
+
+    public PushNotificationController(PushSubscriptionRepository subscriptionRepository, CurrentUserService currentUserService) {
+        this.subscriptionRepository = subscriptionRepository;
+        this.currentUserService = currentUserService;
+    }
 
     @PostMapping("/api/push/subscribe")
     public ResponseEntity<?> subscribe(@RequestBody Map<String, Object> body) {

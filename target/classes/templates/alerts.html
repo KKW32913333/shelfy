@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アラート — Shelfy</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <meta name="theme-color" content="#0ea5e9">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header('alerts')}"></div>
+<div class="layout">
+  <div th:replace="~{fragments/sidebar :: sidebar('alerts')}"></div>
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1 class="page-title">アラート</h1>
+    </div>
+
+    <!-- 期限切れ -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header" style="background:#fee2e2;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <i class="ti ti-alert-circle" style="color:#dc2626;font-size:18px;"></i>
+          <h2 class="card-title" style="color:#dc2626;">期限切れ</h2>
+        </div>
+        <span class="badge badge--expired" th:text="${expiredItems.size()} + '件'"></span>
+      </div>
+      <div class="item-list">
+        <div th:if="${#lists.isEmpty(expiredItems)}" class="empty-state">
+          <i class="ti ti-circle-check" style="font-size:32px;color:var(--success);"></i>
+          <p style="margin-top:8px;">期限切れのアイテムはありません</p>
+        </div>
+        <a th:each="item : ${expiredItems}"
+           th:href="@{/items/{id}(id=${item.id})}"
+           class="item-row" style="text-decoration:none;color:inherit;">
+          <div class="item-thumb">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
+            <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">
+              <i class="ti ti-package" style="font-size:20px;color:var(--text-muted);"></i>
+            </span>
+          </div>
+          <div class="item-info">
+            <div class="item-name" th:text="${item.name}"></div>
+            <div class="item-meta" th:text="${item.expiryType == 'use_by' ? '消費期限' : '賞味期限'} + '：' + ${#temporals.format(item.expiryDate,'yyyy/MM/dd')}"></div>
+          </div>
+          <span class="badge badge--expired">期限切れ</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 7日以内 -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header" style="background:#fef9c3;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <i class="ti ti-clock" style="color:#b45309;font-size:18px;"></i>
+          <h2 class="card-title" style="color:#b45309;">7日以内に期限</h2>
+        </div>
+        <span class="badge badge--soon" th:text="${soonItems.size()} + '件'"></span>
+      </div>
+      <div class="item-list">
+        <div th:if="${#lists.isEmpty(soonItems)}" class="empty-state">
+          <i class="ti ti-circle-check" style="font-size:32px;color:var(--success);"></i>
+          <p style="margin-top:8px;">7日以内の期限アイテムはありません</p>
+        </div>
+        <a th:each="item : ${soonItems}"
+           th:href="@{/items/{id}(id=${item.id})}"
+           class="item-row" style="text-decoration:none;color:inherit;">
+          <div class="item-thumb">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
+            <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">
+              <i class="ti ti-salad" style="font-size:20px;color:var(--text-muted);"></i>
+            </span>
+          </div>
+          <div class="item-info">
+            <div class="item-name" th:text="${item.name}"></div>
+            <div class="item-meta" th:text="${item.expiryType == 'use_by' ? '消費期限' : '賞味期限'} + '：' + ${#temporals.format(item.expiryDate,'yyyy/MM/dd')}"></div>
+          </div>
+          <span class="badge badge--soon" th:text="'あと' + ${item.daysUntilExpiry} + '日'"></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 在庫不足 -->
+    <div class="card" style="margin-bottom:80px;">
+      <div class="card-header" style="background:#ffedd5;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <i class="ti ti-package" style="color:#ea580c;font-size:18px;"></i>
+          <h2 class="card-title" style="color:#ea580c;">在庫不足</h2>
+        </div>
+        <span class="badge badge--low" th:text="${lowStockItems.size()} + '件'"></span>
+      </div>
+      <div class="item-list">
+        <div th:if="${#lists.isEmpty(lowStockItems)}" class="empty-state">
+          <i class="ti ti-circle-check" style="font-size:32px;color:var(--success);"></i>
+          <p style="margin-top:8px;">在庫不足のアイテムはありません</p>
+        </div>
+        <a th:each="item : ${lowStockItems}"
+           th:href="@{/items/{id}(id=${item.id})}"
+           class="item-row" style="text-decoration:none;color:inherit;">
+          <div class="item-thumb">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
+            <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">
+              <i class="ti ti-package" style="font-size:20px;color:var(--text-muted);"></i>
+            </span>
+          </div>
+          <div class="item-info">
+            <div class="item-name" th:text="${item.name}"></div>
+            <div class="item-meta" th:text="'補充目安：' + ${item.minStock} + '個'"></div>
+          </div>
+          <span th:class="'badge badge--' + ${item.stockStatus}"
+                th:text="${item.stock} + '個'"></span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <a href="/daily" class="bottom-nav-item">
+    <i class="ti ti-package nav-icon" aria-hidden="true"></i>
+    <span>日用品</span>
+  </a>
+  <a href="/food" class="bottom-nav-item">
+    <i class="ti ti-salad nav-icon" aria-hidden="true"></i>
+    <span>食品</span>
+  </a>
+  <a href="/dashboard" class="bottom-nav-center">
+    <div class="nav-home-btn"><i class="ti ti-home" aria-hidden="true"></i></div>
+    <span>ホーム</span>
+  </a>
+  <a href="/photos" class="bottom-nav-item">
+    <i class="ti ti-photo nav-icon" aria-hidden="true"></i>
+    <span>写真一覧</span>
+  </a>
+  <a href="/items/new" class="bottom-nav-item">
+    <i class="ti ti-plus nav-icon" aria-hidden="true"></i>
+    <span>追加</span>
+  </a>
+</nav>
+</body>
+</html>

@@ -3,7 +3,6 @@ package com.example.shelfy.controller;
 import com.example.shelfy.model.ShelfyItem;
 import com.example.shelfy.service.CurrentUserService;
 import com.example.shelfy.service.ShelfyItemService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 
 @Controller
-@RequiredArgsConstructor
 public class ItemController {
 
     private final ShelfyItemService itemService;
     private final CurrentUserService currentUserService;
+
+    public ItemController(ShelfyItemService itemService, CurrentUserService currentUserService) {
+        this.itemService = itemService;
+        this.currentUserService = currentUserService;
+    }
 
     // =============================================
     // 日用品一覧

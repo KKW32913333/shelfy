@@ -1,8 +1,6 @@
 package com.example.shelfy.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,8 +14,6 @@ import java.time.temporal.ChronoUnit;
  */
 @Entity
 @Table(name = "shelfy_item")
-@Getter
-@Setter
 public class ShelfyItem {
 
     @Id
@@ -171,4 +167,40 @@ public class ShelfyItem {
                 || "seasoning".equals(category)
                 || "drink".equals(category);
     }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getGroupId() { return groupId; }
+    public void setGroupId(Long groupId) { this.groupId = groupId; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
+    public int getMinStock() { return minStock; }
+    public void setMinStock(int minStock) { this.minStock = minStock; }
+    public String getMemo() { return memo; }
+    public void setMemo(String memo) { this.memo = memo; }
+    public LocalDate getPurchaseDate() { return purchaseDate; }
+    public void setPurchaseDate(LocalDate purchaseDate) { this.purchaseDate = purchaseDate; }
+    public String getExpiryType() { return expiryType; }
+    public void setExpiryType(String expiryType) { this.expiryType = expiryType; }
+    public LocalDate getExpiryDate() { return expiryDate; }
+    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public boolean isLinkedToShopping() { return linkedToShopping; }
+    public void setLinkedToShopping(boolean linkedToShopping) { this.linkedToShopping = linkedToShopping; }
+    public LocalDateTime getLinkedAt() { return linkedAt; }
+    public void setLinkedAt(LocalDateTime linkedAt) { this.linkedAt = linkedAt; }
+    public Long getCreatedBy() { return createdBy; }
+    public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
+    public Long getUpdatedBy() { return updatedBy; }
+    public void setUpdatedBy(Long updatedBy) { this.updatedBy = updatedBy; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
 }
