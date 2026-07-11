@@ -33,34 +33,34 @@
 
     <!-- サマリーカード -->
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon stat-icon--blue">📦</div>
+      <a th:href="@{/food}" class="stat-card stat-card--link">
+        <i class="ti ti-box stat-ti"></i>
         <div class="stat-body">
           <div class="stat-value" th:text="${stats.total}">0</div>
           <div class="stat-label">総アイテム数</div>
         </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon stat-icon--green">📅</div>
+      </a>
+      <a th:href="@{/food}" class="stat-card stat-card--link">
+        <i class="ti ti-calendar stat-ti"></i>
         <div class="stat-body">
           <div class="stat-value" th:text="${stats.expiringWarning}">0</div>
-          <div class="stat-label">賞味期限（30日以内）</div>
+          <div class="stat-label">30日以内</div>
         </div>
-      </div>
-      <div class="stat-card stat-card--warning">
-        <div class="stat-icon stat-icon--yellow">⏰</div>
+      </a>
+      <a th:href="@{/food}" class="stat-card stat-card--link stat-card--warning">
+        <i class="ti ti-clock stat-ti" style="color:var(--warning);"></i>
         <div class="stat-body">
           <div class="stat-value" th:text="${stats.expiringSoon}">0</div>
-          <div class="stat-label">賞味期限（7日以内）</div>
+          <div class="stat-label">7日以内</div>
         </div>
-      </div>
-      <div class="stat-card stat-card--danger">
-        <div class="stat-icon stat-icon--red">🔴</div>
+      </a>
+      <a th:href="@{/alerts}" class="stat-card stat-card--link stat-card--danger">
+        <i class="ti ti-alert-circle stat-ti" style="color:var(--danger);"></i>
         <div class="stat-body">
           <div class="stat-value" th:text="${stats.expired}">0</div>
           <div class="stat-label">期限切れ</div>
         </div>
-      </div>
+      </a>
     </div>
 
     <div class="dashboard-grid">
@@ -182,9 +182,9 @@
     <div class="nav-home-btn"><i class="ti ti-home" aria-hidden="true"></i></div>
     <span>ホーム</span>
   </a>
-  <a href="/alerts" class="bottom-nav-item">
-    <i class="ti ti-bell nav-icon" aria-hidden="true"></i>
-    <span>アラート</span>
+  <a href="/photos" class="bottom-nav-item">
+    <i class="ti ti-photo nav-icon" aria-hidden="true"></i>
+    <span>写真</span>
   </a>
   <a href="/items/new" class="bottom-nav-item">
     <i class="ti ti-plus nav-icon" aria-hidden="true"></i>

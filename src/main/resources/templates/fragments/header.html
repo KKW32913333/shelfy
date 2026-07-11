@@ -7,17 +7,50 @@
 <body>
 <header th:fragment="header(activePage)" class="app-header">
   <div class="header-inner">
-    <button th:if="${activePage != 'dashboard'}" class="header-icon-btn" onclick="history.back()" aria-label="戻る" style="background:none;border:none;cursor:pointer;">
-      <i class="ti ti-chevron-left" style="font-size:22px; color:var(--text-muted);"></i>
+
+    <button class="header-icon-btn" onclick="document.getElementById('side-menu').classList.add('open')" aria-label="メニュー" style="background:none;border:none;cursor:pointer;">
+      <i class="ti ti-menu-2" style="font-size:22px; color:var(--text-muted);"></i>
     </button>
-    <span th:if="${activePage == 'dashboard'}" style="width:36px;"></span>
+
     <a th:href="@{/dashboard}" class="header-logo">
       <span class="logo-text">Shelfy</span>
     </a>
-    <a th:href="@{/logout}" class="header-icon-btn" aria-label="ログアウト" style="text-decoration:none;">
-      <i class="ti ti-logout" style="font-size:20px; color:var(--text-muted);"></i>
+
+    <a th:href="@{/alerts}" class="header-icon-btn" aria-label="アラート" style="text-decoration:none; position:relative;">
+      <i class="ti ti-bell" style="font-size:22px; color:var(--text-muted);"></i>
     </a>
+
   </div>
 </header>
+
+<!-- サイドメニュー -->
+<div id="side-menu" class="side-menu-overlay" onclick="this.classList.remove('open')">
+  <div class="side-menu-panel" onclick="event.stopPropagation()">
+    <div class="side-menu-header">
+      <span class="logo-text">Shelfy</span>
+      <button onclick="document.getElementById('side-menu').classList.remove('open')" style="background:none;border:none;cursor:pointer;">
+        <i class="ti ti-x" style="font-size:22px; color:var(--text-muted);"></i>
+      </button>
+    </div>
+    <nav class="side-menu-nav">
+      <a th:href="@{/dashboard}" class="side-menu-item">
+        <i class="ti ti-home" aria-hidden="true"></i>ホーム
+      </a>
+      <a th:href="@{/daily}" class="side-menu-item">
+        <i class="ti ti-package" aria-hidden="true"></i>日用品管理
+      </a>
+      <a th:href="@{/food}" class="side-menu-item">
+        <i class="ti ti-salad" aria-hidden="true"></i>食品・調味料管理
+      </a>
+      <a th:href="@{/alerts}" class="side-menu-item">
+        <i class="ti ti-bell" aria-hidden="true"></i>アラート
+      </a>
+      <div class="side-menu-divider"></div>
+      <a th:href="@{/logout}" class="side-menu-item side-menu-item--danger">
+        <i class="ti ti-logout" aria-hidden="true"></i>ログアウト
+      </a>
+    </nav>
+  </div>
+</div>
 </body>
 </html>
