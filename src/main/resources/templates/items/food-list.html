@@ -4,79 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>食品・調味料管理 - Shelfy</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="white">
-  <meta name="apple-mobile-web-app-title" content="Shelfy">
-  <link rel="apple-touch-startup-image" href="/splash/splash_1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
-  <link rel="apple-touch-startup-image" href="/splash/splash_1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)">
-  <link rel="apple-touch-startup-image" href="/splash/splash_750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
-  <link rel="apple-touch-startup-image" href="/splash/splash_2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <meta name="theme-color" content="#0ea5e9">
-  <link rel="stylesheet" th:href="@{/css/style.css}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Shelfy">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header('items')}"></div>
+<div th:replace="~{fragments/header :: header('daily')}"></div>
 <div class="layout">
-  <div th:replace="~{fragments/sidebar :: sidebar('food')}"></div>
+  <div th:replace="~{fragments/sidebar :: sidebar('daily')}"></div>
   <main class="main-content">
     <div class="page-header">
-      <div>
-        <h1 class="page-title">食品・調味料管理</h1>
-        
-      </div>
-      <a th:href="@{/items/new(category=food)}" class="btn btn-primary">＋ アイテムを追加</a>
+      <h1 class="page-title">食品・調味料管理</h1>
+      <a th:href="@{/items/new(category=food)}" class="btn btn-primary">
+        <i class="ti ti-plus"></i> 追加
+      </a>
     </div>
+
     <div th:if="${success}" class="flash flash--success" th:text="${success}"></div>
+
     <div class="card">
       <div class="item-list">
         <div th:if="${#lists.isEmpty(items)}" class="empty-state">
-          <p>日用品がまだ登録されていません</p>
-          <a th:href="@{/items/new(category=food)}" class="btn btn-primary" style="margin-top:12px">最初のアイテムを追加</a>
+          <i class="ti ti-salad" style="font-size:40px; color:var(--text-muted);"></i>
+          <p style="margin-top:12px;">日用品がまだ登録されていません</p>
+          <a th:href="@{/items/new(category=food)}" class="btn btn-primary" style="margin-top:12px;">最初のアイテムを追加</a>
         </div>
-        <a th:each="item : ${items}" th:href="@{/items/{id}(id=${item.id})}" class="item-row" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px;">
-          <div class="item-thumb">
-            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
-            <span th:unless="${item.imageUrl}" class="item-thumb-placeholder">🥛</span>
+        <a th:each="item : ${items}"
+           th:href="@{/items/{id}(id=${item.id})}"
+           class="item-row" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border);">
+          <div class="item-thumb" style="flex-shrink:0;">
+            <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}"
+                 style="width:44px; height:44px; object-fit:cover; border-radius:8px;">
+            <div th:unless="${item.imageUrl}"
+                 style="width:44px; height:44px; background:var(--bg); border-radius:8px; display:flex; align-items:center; justify-content:center;">
+              <i class="ti ti-salad" style="font-size:22px; color:var(--text-muted);"></i>
+            </div>
           </div>
-          <div class="item-info">
-            <span class="item-name" th:text="${item.name}">商品名</span>
-            <div class="item-meta" th:text="'補充目安：' + ${item.minStock} + '個'"></div>
+          <div class="item-info" style="flex:1; min-width:0;">
+            <div style="font-weight:600; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" th:text="${item.name}"></div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;" th:text="'補充目安：' + ${item.minStock} + '個'"></div>
           </div>
-          <div class="item-badge">
+          <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
             <span th:class="'badge badge--' + ${item.stockStatus}"
                   th:text="${item.stock} + '個'"></span>
-            <span th:if="${item.linkedToShopping}" class="badge badge--linkle">🛒Linkle</span>
+            <span th:if="${item.linkedToShopping}" class="badge badge--linkle" style="font-size:10px;">🛒</span>
+            <i class="ti ti-chevron-right" style="font-size:16px; color:var(--text-muted);"></i>
           </div>
-          <div class="item-actions">
-            <form th:action="@{/items/{id}/stock(id=${item.id})}" method="post" style="display:inline">
-              <input type="hidden" name="delta" value="-1">
-              <input type="hidden" name="returnTo" value="/food">
-              <button type="submit" class="btn-icon">－</button>
-            </form>
-            <form th:action="@{/items/{id}/stock(id=${item.id})}" method="post" style="display:inline">
-              <input type="hidden" name="delta" value="1">
-              <input type="hidden" name="returnTo" value="/food">
-              <button type="submit" class="btn-icon btn-icon--green">＋</button>
-            </form>
-            <a th:href="@{/items/{id}/edit(id=${item.id})}" class="btn-icon">✏️</a>
-            <form th:action="@{/items/{id}/delete(id=${item.id})}" method="post" style="display:inline"
-                  onsubmit="return confirm('削除しますか？')">
-              <input type="hidden" name="returnTo" value="/food">
-              <button type="submit" class="btn-icon" style="color:var(--danger)">🗑</button>
-            </form>
-          </a>
-        </div>
+        </a>
       </div>
     </div>
   </main>
 </div>
+
 <nav class="bottom-nav">
-  <a href="/daily" class="bottom-nav-item">
-    <i class="ti ti-package nav-icon" aria-hidden="true"></i>
+  <a href="/daily" class="bottom-nav-item active">
+    <i class="ti ti-salad nav-icon" aria-hidden="true"></i>
     <span>日用品</span>
   </a>
   <a href="/food" class="bottom-nav-item active">
