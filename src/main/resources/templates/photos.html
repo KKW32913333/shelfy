@@ -100,9 +100,9 @@
         <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" th:alt="${item.name}">
         <div th:unless="${item.imageUrl}" class="no-photo">
           <i class="ti ti-camera" style="font-size:24px;"></i>
-          <span th:text="${item.name}" style="text-align:center;padding:0 4px;"></span>
+          <span th:text="${item.name}" style="text-align:center;padding:0 4px; font-size:11px;"></span>
         </div>
-        <div class="photo-label" th:text="${item.name}"></div>
+        <div th:if="${item.imageUrl}" class="photo-label" th:text="${item.name}"></div>
       </a>
     </div>
 
