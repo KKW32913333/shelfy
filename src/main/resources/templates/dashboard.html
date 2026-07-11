@@ -30,12 +30,11 @@
 
   <!-- メインコンテンツ -->
   <main class="main-content">
-    <div class="page-header">
-      <div>
-        <h1 class="page-title">ダッシュボード</h1>
-        <p class="page-subtitle">在庫の状況をひと目で確認できます</p>
-      </div>
-      <a th:href="@{/items/new}" class="btn btn-primary">＋ アイテムを追加</a>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <h1 style="font-size:18px; font-weight:700; color:var(--text); margin:0;">ダッシュボード</h1>
+      <a th:href="@{/items/new}" style="background:#0ea5e9; color:#fff; padding:7px 16px; border-radius:20px; font-size:12px; font-weight:700; text-decoration:none; display:flex; align-items:center; gap:4px;">
+        <i class="ti ti-plus" style="font-size:14px;"></i>追加
+      </a>
     </div>
 
     <!-- プッシュ通知バナー -->
@@ -50,34 +49,26 @@
     </div>
 
     <!-- サマリーカード -->
-    <div class="stats-grid">
-      <a th:href="@{/food}" class="stat-card stat-card--link">
-        <i class="ti ti-box stat-ti"></i>
-        <div class="stat-body">
-          <div class="stat-value" th:text="${stats.total}">0</div>
-          <div class="stat-label">総アイテム数</div>
-        </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+      <a th:href="@{/food}" style="background:#fff; border-radius:12px; padding:14px; border:0.5px solid #e2e8f0; text-decoration:none; display:block;">
+        <div style="font-size:11px; color:#94a3b8; font-weight:500; margin-bottom:6px;">総アイテム数</div>
+        <div style="font-size:28px; font-weight:800; color:#1e293b; line-height:1;" th:text="${stats.total}">0</div>
+        <div style="font-size:11px; color:#0ea5e9; margin-top:6px; font-weight:500;">すべて見る →</div>
       </a>
-      <a th:href="@{/food}" class="stat-card stat-card--link">
-        <i class="ti ti-calendar stat-ti"></i>
-        <div class="stat-body">
-          <div class="stat-value" th:text="${stats.expiringWarning}">0</div>
-          <div class="stat-label">30日以内</div>
-        </div>
+      <a th:href="@{/food}" style="background:#fff; border-radius:12px; padding:14px; border:0.5px solid #e2e8f0; text-decoration:none; display:block;">
+        <div style="font-size:11px; color:#94a3b8; font-weight:500; margin-bottom:6px;">30日以内</div>
+        <div style="font-size:28px; font-weight:800; color:#1e293b; line-height:1;" th:text="${stats.expiringWarning}">0</div>
+        <div style="font-size:11px; color:#0ea5e9; margin-top:6px; font-weight:500;">確認する →</div>
       </a>
-      <a th:href="@{/food}" class="stat-card stat-card--link stat-card--warning">
-        <i class="ti ti-clock stat-ti" style="color:var(--warning);"></i>
-        <div class="stat-body">
-          <div class="stat-value" th:text="${stats.expiringSoon}">0</div>
-          <div class="stat-label">7日以内</div>
-        </div>
+      <a th:href="@{/food}" style="background:#fff; border-radius:12px; padding:14px; border:0.5px solid #fbbf24; text-decoration:none; display:block;">
+        <div style="font-size:11px; color:#94a3b8; font-weight:500; margin-bottom:6px;">7日以内</div>
+        <div style="font-size:28px; font-weight:800; color:#f59e0b; line-height:1;" th:text="${stats.expiringSoon}">0</div>
+        <div style="font-size:11px; color:#f59e0b; margin-top:6px; font-weight:500;">確認する →</div>
       </a>
-      <a th:href="@{/alerts}" class="stat-card stat-card--link stat-card--danger">
-        <i class="ti ti-alert-circle stat-ti" style="color:var(--danger);"></i>
-        <div class="stat-body">
-          <div class="stat-value" th:text="${stats.expired}">0</div>
-          <div class="stat-label">期限切れ</div>
-        </div>
+      <a th:href="@{/alerts}" style="background:#fff; border-radius:12px; padding:14px; border:0.5px solid #fca5a5; text-decoration:none; display:block;">
+        <div style="font-size:11px; color:#94a3b8; font-weight:500; margin-bottom:6px;">期限切れ</div>
+        <div style="font-size:28px; font-weight:800; color:#ef4444; line-height:1;" th:text="${stats.expired}">0</div>
+        <div style="font-size:11px; color:#ef4444; margin-top:6px; font-weight:500;">確認する →</div>
       </a>
     </div>
 
