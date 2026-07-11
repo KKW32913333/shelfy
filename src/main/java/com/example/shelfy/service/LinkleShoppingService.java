@@ -139,8 +139,8 @@ public class LinkleShoppingService {
         try {
             String sql = """
                 UPDATE shopping_item
-                SET checked = true
-                WHERE group_id = ? AND name = ? AND source = 'shelfy' AND checked = false
+                SET purchased = true
+                WHERE group_id = ? AND name = ? AND source = 'shelfy' AND purchased = false
                 """;
             int updated = linkleJdbc.update(sql, item.getGroupId(), item.getName());
             if (updated > 0) {
